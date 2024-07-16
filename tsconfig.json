@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ES2020",
+    "outDir": "dist",
+    "rootDir": "src",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "strict": true,
+    "noEmitOnError": false,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true
+  }
+}
