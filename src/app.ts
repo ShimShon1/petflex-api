@@ -1,14 +1,13 @@
 import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
-import User from "./models/User.js";
+import indexRouter from "./routes/index.js";
 const app = express();
+app.use(express.json());
 mongoose
   .connect(process.env.DB_LINK!)
   .catch((err) => console.log(err));
 
-app.get("/", (req, res) => {
-  res.json({ msg: "hey!!" });
-});
+app.use("/", indexRouter);
 
 app.listen(3000);

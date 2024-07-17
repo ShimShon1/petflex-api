@@ -10,5 +10,6 @@
     "noEmitOnError": false,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true
-  }
+  },
+  "include": ["src/**/*/"]
 }
