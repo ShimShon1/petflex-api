@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import {
   Result,
   ValidationError,
@@ -33,4 +34,34 @@ export async function register(
   }
 }
 
-export async function login() {}
+export async function login(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    const user = await User.findOne({ username: req.body.username });
+    if (user !== null) {
+      const result = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (!result) {
+        return res.status(400).json({ msg: "Wrong password" });
+      } else {
+        const token = jwt.sign(
+          { ...user },
+          "process.env.JWT_SECRET",
+          { expiresIn: "1h" }
+        );
+        return res.json({ user, token });
+      }
+    } else {
+      return res.status(400).json({ msg: "Wrong username" });
+    }
+    return res.json({ user });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "There was an error" });
+  }
+}

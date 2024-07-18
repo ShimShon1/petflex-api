@@ -12,6 +12,6 @@ router.get("/", (req, res) => {
 
 router.post("/users", userValidation, validate, register);
 
-router.post("/login", userValidation, validate, login);
+router.post("/auth/login", userValidation, validate, login);
 
 export default router;
