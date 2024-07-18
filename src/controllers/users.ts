@@ -11,25 +11,26 @@ export async function register(
   res: express.Response,
   next: express.NextFunction
 ) {
-  let errors: Result<ValidationError> | ValidationError[] =
-    validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ msg: "error", errors });
+  try {
+    const userExists = await User.exists({
+      username: req.body.username,
+    });
+    if (userExists) {
+      return res.status(400).json({
+        msg: "error",
+        errors: [{ msg: "username is taken" }],
+      });
+    }
+    const password = bcrypt.hashSync(req.body.password, 10);
+    const newUser = new User({
+      username: req.body.username,
+      password: password,
+    });
+    newUser.save();
+    return res.json({ newUser });
+  } catch (error) {
+    return res.status(500).json({ msg: "There was an error" });
   }
-  const userExists = await User.exists({
-    username: req.body.username,
-  });
-  if (userExists) {
-    return res
-      .status(400)
-      .json({ msg: "error", errors: [{ msg: "username is taken" }] });
-  }
-  errors = errors.array();
-  const password = bcrypt.hashSync(req.body.password, 10);
-  const newUser = new User({
-    username: req.body.username,
-    password: password,
-  });
-  newUser.save();
-  return res.json({ newUser });
 }
+
+export async function login() {}
