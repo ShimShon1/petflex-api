@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    minLength: 5,
+    minLength: 3,
     maxLength: 20,
   },
   password: {

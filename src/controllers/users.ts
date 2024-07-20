@@ -7,6 +7,7 @@ import {
   ValidationError,
   validationResult,
 } from "express-validator";
+import { UserRequest } from "../types.js";
 export async function register(
   req: express.Request,
   res: express.Response,
@@ -30,7 +31,9 @@ export async function register(
     newUser.save();
     return res.json({ newUser });
   } catch (error) {
-    return res.status(500).json({ msg: "There was an error" });
+    return res
+      .status(500)
+      .json({ errors: { msg: "There was an error" } });
   }
 }
 
@@ -47,21 +50,32 @@ export async function login(
         user.password
       );
       if (!result) {
-        return res.status(400).json({ msg: "Wrong password" });
+        return res
+          .status(400)
+          .json({ errors: { msg: "Wrong password" } });
       } else {
-        const token = jwt.sign(
-          { ...user },
-          "process.env.JWT_SECRET",
-          { expiresIn: "1h" }
-        );
-        return res.json({ user, token });
+        const payload = user.toObject();
+        const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+          expiresIn: "1h",
+        });
+        return res.json({ payload, token });
       }
     } else {
-      return res.status(400).json({ msg: "Wrong username" });
+      return res
+        .status(400)
+        .json({ errors: { msg: "Wrong username" } });
     }
     return res.json({ user });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ msg: "There was an error" });
+    return res
+      .status(500)
+      .json({ errors: { msg: "There was an error" } });
   }
+}
+
+export function getUser(req: UserRequest, res: express.Response) {
+  const { password, iat, exp, ...user } = req.context.user;
+  delete user.__v;
+  res.json({ user });
 }
