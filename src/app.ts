@@ -4,6 +4,7 @@ import "dotenv/config";
 import indexRouter from "./routes/index.js";
 import auth from "./middlewares/auth.js";
 import { UserRequest } from "./types.js";
+import { getPosts, postPosts } from "./controllers/posts.js";
 const app = express();
 app.use(express.json());
 mongoose
@@ -11,6 +12,9 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/", indexRouter);
+
+app.post("/posts", postPosts);
+app.get("/posts", getPosts);
 
 app.get("/protected", auth, function (req: UserRequest, res) {
   console.log(req.context);
