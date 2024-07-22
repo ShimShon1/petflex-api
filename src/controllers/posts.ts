@@ -6,20 +6,31 @@ export function postPosts(
   res: express.Response,
   next: express.NextFunction
 ) {
-  const { name, user, description, image, gender, age, comments } =
-    req.body;
+  const {
+    name,
+    user,
+    description,
+    image,
+    gender,
+    birthDate,
+    comments,
+    createdAt,
+    petType,
+  } = req.body;
   const pet = {
     name,
     user,
     description,
     image,
     gender,
-    age,
+    birthDate,
     comments,
+    createdAt,
+    petType,
   };
   const post = new Post(pet);
   post.save();
-  return res.json({ pet });
+  return res.json({ post });
 }
 
 export async function getPosts(
@@ -28,5 +39,6 @@ export async function getPosts(
   next: express.NextFunction
 ) {
   const posts = await Post.find().populate("user");
-  res.json(posts);
+  console.log(posts[posts.length - 1]);
+  res.json(posts[posts.length - 1]);
 }
