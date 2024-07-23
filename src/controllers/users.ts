@@ -29,7 +29,7 @@ export async function register(
       password: password,
     });
     newUser.save();
-    return res.json({ newUser });
+    return res.status(201).json({ newUser });
   } catch (error) {
     return res
       .status(500)

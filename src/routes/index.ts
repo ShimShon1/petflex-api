@@ -1,7 +1,7 @@
 import express from "express";
 import { getUser, login, register } from "../controllers/users.js";
 import { body } from "express-validator";
-import { userValidation } from "../helpers/validations.js";
+import { userValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
 import auth from "../middlewares/auth.js";
 import { UserRequest } from "../types.js";

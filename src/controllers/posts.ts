@@ -38,7 +38,6 @@ export async function getPosts(
   res: express.Response,
   next: express.NextFunction
 ) {
-  const posts = await Post.find().populate("user");
-  console.log(posts[posts.length - 1]);
-  res.json(posts[posts.length - 1]);
+  const posts = await Post.find();
+  res.json(posts);
 }

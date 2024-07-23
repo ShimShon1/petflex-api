@@ -8,7 +8,7 @@ export default async function auth(
 ) {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (token === undefined) {
-    return res.status(400).json({
+    return res.status(401).json({
       errors: [{ msg: "no token provided or has no bearer" }],
     });
   } else {
@@ -20,7 +20,7 @@ export default async function auth(
       }
     } catch (error) {
       const msg = "token error: " + (error as Error).message;
-      return res.status(400).json({ errors: [{ msg }] });
+      return res.status(401).json({ errors: [{ msg }] });
     }
   }
 }
