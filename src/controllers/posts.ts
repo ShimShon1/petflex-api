@@ -1,36 +1,42 @@
 import express from "express";
 import Post from "../models/Post.js";
 
-export function postPosts(
+export async function postPosts(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ) {
-  const {
-    name,
-    user,
-    description,
-    image,
-    gender,
-    birthDate,
-    comments,
-    createdAt,
-    petType,
-  } = req.body;
-  const pet = {
-    name,
-    user,
-    description,
-    image,
-    gender,
-    birthDate,
-    comments,
-    createdAt,
-    petType,
-  };
-  const post = new Post(pet);
-  post.save();
-  return res.json({ post });
+  try {
+    const {
+      name,
+      user,
+      description,
+      image,
+      gender,
+      birthDate,
+      comments,
+      createdAt,
+      petType,
+    } = req.body;
+    const pet = {
+      name,
+      user,
+      description,
+      image,
+      gender,
+      birthDate,
+      comments,
+      createdAt,
+      petType,
+    };
+    const post = new Post(pet);
+    await post.save();
+    return res.json({ post });
+  } catch (error) {
+    console.log(error);
+    const msg = (error as Error).message;
+    return res.status(500).json({ errors: [{ msg }] });
+  }
 }
 
 export async function getPosts(

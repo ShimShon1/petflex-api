@@ -8,16 +8,31 @@ const usernameValid = makeStringValidator("username", {
 
 const passwordValid = makeStringValidator("password", {
   min: 5,
-  max: 20,
+  max: 40,
 });
 
 //for posts (mainly)
-const nameValid = body("name")
-  .isString()
-  .trim()
-  .isLength({ min: 5, max: 20 })
-  .withMessage("name must be between 3 and 20");
+const nameValid = makeStringValidator("name", {
+  min: 3,
+  max: 30,
+});
+const descriptionValid = makeStringValidator("description", {
+  min: 3,
+  max: 5000,
+});
+const imageValid = makeStringValidator("image", {
+  min: 3,
+  max: 1200,
+});
+const genderValid = makeStringValidator("gender");
+const petTypeValid = makeStringValidator("petType");
 
 export const userValidation = [usernameValid, passwordValid];
 
-export const postValidation = [nameValid];
+export const postValidation = [
+  nameValid,
+  descriptionValid,
+  imageValid,
+  genderValid,
+  petTypeValid,
+];

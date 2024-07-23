@@ -56,7 +56,7 @@ export async function login(
       } else {
         const payload = user.toObject();
         const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-          expiresIn: "1h",
+          expiresIn: "12h",
         });
         return res.json({ payload, token });
       }

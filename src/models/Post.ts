@@ -1,21 +1,43 @@
 import mongoose, { Types } from "mongoose";
 
+const petTypes = ["dog", "cat", "lizard", "hamster", "rabbit"];
+
 const commentSchema = new mongoose.Schema({
   user: { type: Types.ObjectId, ref: "User", required: true },
-  comment: { type: String, required: true },
+  comment: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 1000,
+  },
   createdAt: { type: Date, required: true, default: Date.now },
 });
 
 const PostSchema = new mongoose.Schema({
   user: { type: Types.ObjectId, ref: "User", required: true },
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  image: { type: String, required: true },
-  gender: { type: String, required: true },
+  name: { type: String, required: true, minLength: 3, maxLength: 30 },
+  description: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 5000,
+  },
+  image: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 1200,
+  },
+  gender: {
+    type: String,
+    required: true,
+    enum: ["male", "female", "unknown"],
+  },
   birthDate: { type: Date, required: true },
   petType: {
     type: String,
     required: true,
+    enum: petTypes,
   },
   comments: [commentSchema],
   likes: [{ type: Types.ObjectId, ref: "User" }],
