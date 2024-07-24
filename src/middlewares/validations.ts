@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import { makeStringValidator } from "../helpers/make_validators.js";
+import { genders, petTypes } from "../types.js";
 
 const usernameValid = makeStringValidator("username", {
   min: 3,
@@ -24,9 +25,27 @@ const imageValid = makeStringValidator("image", {
   min: 3,
   max: 1200,
 });
-const genderValid = makeStringValidator("gender");
-const petTypeValid = makeStringValidator("petType");
+const genderValid = makeStringValidator("gender")
+  .isIn(genders)
+  .withMessage(
+    (e) => e + " is not a valid gender, use male, female or unknown"
+  );
 
+const petTypeValid = makeStringValidator("petType")
+  .isIn(petTypes)
+  .withMessage((e) => e + " is not a valid pet type");
+
+const birthValid = body("birthDate")
+  .custom((value) => {
+    const date = new Date(value);
+    if (isNaN(date.getFullYear())) {
+      return false;
+    } else {
+      return true;
+    }
+  })
+  .withMessage("birth date is invalid");
+//middleware arrays for controllers
 export const userValidation = [usernameValid, passwordValid];
 
 export const postValidation = [
@@ -35,4 +54,5 @@ export const postValidation = [
   imageValid,
   genderValid,
   petTypeValid,
+  birthValid,
 ];

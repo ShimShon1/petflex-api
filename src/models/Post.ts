@@ -1,6 +1,5 @@
 import mongoose, { Types } from "mongoose";
-
-const petTypes = ["dog", "cat", "lizard", "hamster", "rabbit"];
+import { genders, petTypes } from "../types.js";
 
 const commentSchema = new mongoose.Schema({
   user: { type: Types.ObjectId, ref: "User", required: true },
@@ -31,7 +30,7 @@ const PostSchema = new mongoose.Schema({
   gender: {
     type: String,
     required: true,
-    enum: ["male", "female", "unknown"],
+    enum: genders,
   },
   birthDate: { type: Date, required: true },
   petType: {
