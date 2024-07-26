@@ -9,6 +9,7 @@ import { UserRequest } from "./types.js";
 import { getPosts, postPosts } from "./controllers/posts.js";
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 mongoose
   .connect(process.env.DB_LINK!)
   .catch((err) => console.log(err));
