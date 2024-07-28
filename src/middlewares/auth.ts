@@ -11,16 +11,15 @@ export default async function auth(
     return res.status(401).json({
       errors: [{ msg: "no token provided or has no bearer" }],
     });
-  } else {
-    try {
-      const verified = jwt.verify(token, process.env.JWT_SECRET!);
-      if (verified) {
-        req.context = { user: verified };
-        next();
-      }
-    } catch (error) {
-      const msg = "token error: " + (error as Error).message;
-      return res.status(401).json({ errors: [{ msg }] });
+  }
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET!);
+    if (verified) {
+      req.context = { user: verified };
+      next();
     }
+  } catch (error) {
+    const msg = "token error: " + (error as Error).message;
+    return res.status(401).json({ errors: [{ msg }] });
   }
 }

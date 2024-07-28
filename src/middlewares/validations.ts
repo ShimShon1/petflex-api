@@ -21,10 +21,7 @@ const descriptionValid = makeStringValidator("description", {
   min: 3,
   max: 5000,
 });
-const imageValid = makeStringValidator("image", {
-  min: 3,
-  max: 1200,
-});
+
 const genderValid = makeStringValidator("gender")
   .isIn(genders)
   .withMessage(
@@ -51,7 +48,6 @@ export const userValidation = [usernameValid, passwordValid];
 export const postValidation = [
   nameValid,
   descriptionValid,
-  imageValid,
   genderValid,
   petTypeValid,
   birthValid,

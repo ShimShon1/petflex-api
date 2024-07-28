@@ -1,36 +1,23 @@
 import express from "express";
 import Post from "../models/Post.js";
-import { isObjectIdOrHexString, isValidObjectId } from "mongoose";
+import { isObjectIdOrHexString } from "mongoose";
+import { UserRequest } from "../types.js";
 
 export async function postPosts(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: UserRequest,
+  res: express.Response
 ) {
   try {
-    const {
-      name,
-      user,
-      description,
-      image,
-      gender,
-      birthDate,
-      comments,
-      createdAt,
-      petType,
-    } = req.body;
-    const pet = {
-      name,
-      user,
-      description,
-      image,
-      gender,
-      birthDate,
-      comments,
-      createdAt,
-      petType,
-    };
-    const post = new Post(pet);
+    const post = new Post({
+      name: req.body.name,
+      user: req.context.user._id,
+      description: req.body.description,
+      image: req.file?.path,
+      gender: req.body.gender,
+      birthDate: req.body.birthDate,
+      comments: req.body.comments,
+      petType: req.body.petType,
+    });
     await post.save();
     return res.json({ post });
   } catch (error) {
@@ -45,7 +32,7 @@ export async function getPosts(
   res: express.Response
 ) {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().populate("user", "username");
     res.json(posts);
   } catch (error) {
     return res
