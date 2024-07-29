@@ -40,29 +40,3 @@ export async function getPosts(
       .json({ errors: [{ msg: "There was an error" }] });
   }
 }
-
-//get single post
-export async function getPostById(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) {
-  try {
-    if (!isObjectIdOrHexString(req.params.id)) {
-      return res.status(404).json({
-        errors: [{ msg: "post not found, id is probably invalid" }],
-      });
-    }
-    const post = await Post.findOne({ _id: req.params.id });
-    if (post === null) {
-      return res
-        .status(404)
-        .json({ errors: [{ msg: "post not found" }] });
-    }
-    return res.json({ post });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ errors: [{ msg: "There was an error" }] });
-  }
-}

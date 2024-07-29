@@ -1,17 +1,13 @@
 import express from "express";
-import {
-  getPostById,
-  getPosts,
-  postPosts,
-} from "../controllers/posts.js";
+import { getPosts, postPosts } from "../controllers/posts.js";
 import auth from "../middlewares/auth.js";
 import { postValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
 import upload from "../middlewares/upload.js";
 import { UserRequest } from "../types.js";
+import { getPostByParam } from "../middlewares/posts.js";
 const router = express.Router();
 
-// router.post("/", auth, postValidation, validate, postPosts);
 router.post(
   "/",
   auth,
@@ -22,21 +18,19 @@ router.post(
 );
 
 router.get("/", getPosts);
-router.get("/:id", getPostById);
+router.get("/:id", getPostByParam, (req: UserRequest, res) =>
+  res.json({ context: req.context })
+);
+router.post("/:id/like", auth, getPostByParam, likePost);
 
-function test(
+async function likePost(
   req: UserRequest,
   res: express.Response,
   next: express.NextFunction
 ) {
-  console.log(req.body);
-  console.log(req.file);
-  console.log(req.context);
-  return res.json({
-    msg: "returned",
-    img: req.file?.path,
-    context: req.context,
-  });
+  const id = req.context.user._id.toString();
+
+  return res.json({ context: req.context });
 }
 
 export default router;
