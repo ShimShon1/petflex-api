@@ -40,3 +40,28 @@ export async function getPosts(
       .json({ errors: [{ msg: "There was an error" }] });
   }
 }
+
+export async function likePost(
+  req: UserRequest,
+  res: express.Response
+) {
+  try {
+    const id = req.context.user._id.toString();
+    const post = req.context.post;
+    if (post.likes.includes(id)) {
+      post.likes = post.likes.filter(
+        (l: string) => l.toString() !== id
+      );
+      await post.save();
+      return res.status(200).json({ likes: post.likes });
+    } else {
+      post.likes.push(id);
+      await post.save();
+      return res.status(200).json({ likes: post.likes });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ errors: [{ msg: "There was an error" }] });
+  }
+}
