@@ -9,6 +9,7 @@ const commentSchema = new mongoose.Schema({
     minLength: 3,
     maxLength: 1000,
   },
+  replies: [{ type: Types.ObjectId, ref: "Comment" }],
   createdAt: { type: Date, required: true, default: Date.now },
 });
 

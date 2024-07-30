@@ -65,3 +65,13 @@ export async function likePost(
       .json({ errors: [{ msg: "There was an error" }] });
   }
 }
+
+export async function commentOnPost(
+  req: UserRequest,
+  res: express.Response
+) {
+  const { user, post } = req.context;
+  post.comments.push({ user: user._id, comment: req.body.comment });
+  await req.context.post.save();
+  res.json({ comments: post.comments });
+}
