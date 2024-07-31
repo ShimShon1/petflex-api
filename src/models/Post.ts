@@ -1,17 +1,7 @@
 import mongoose, { Types } from "mongoose";
 import { genders, petTypes } from "../types.js";
-
-const commentSchema = new mongoose.Schema({
-  user: { type: Types.ObjectId, ref: "User", required: true },
-  comment: {
-    type: String,
-    required: true,
-    minLength: 3,
-    maxLength: 1000,
-  },
-  replies: [{ type: Types.ObjectId, ref: "Comment" }],
-  createdAt: { type: Date, required: true, default: Date.now },
-});
+import { CommentSchema } from "./Reply.js";
+import calcAge from "../helpers/calcAge.js";
 
 const PostSchema = new mongoose.Schema({
   user: { type: Types.ObjectId, ref: "User", required: true },
@@ -39,7 +29,7 @@ const PostSchema = new mongoose.Schema({
     required: true,
     enum: petTypes,
   },
-  comments: [commentSchema],
+  comments: [CommentSchema],
   likes: [{ type: Types.ObjectId, ref: "User" }],
   createdAt: { type: Date, required: true, default: Date.now },
 });
@@ -49,22 +39,7 @@ PostSchema.virtual("likesCount").get(function () {
 });
 
 PostSchema.virtual("age").get(function () {
-  const now = new Date();
-  const then = this.birthDate as Date;
-
-  let years = now.getFullYear() - then.getFullYear();
-  let months = now.getMonth() - then.getMonth();
-  let days = now.getDate() - then.getDate();
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
-  if (days < 0) {
-    months--;
-    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-    days += prevMonth.getDate();
-  }
-  return { years, months, days };
+  return calcAge(this.birthDate);
 });
 
 PostSchema.set("toJSON", { virtuals: true });
