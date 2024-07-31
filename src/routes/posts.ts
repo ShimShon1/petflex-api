@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  commentOnPost,
   getPosts,
   likePost,
   postPosts,
@@ -12,6 +11,7 @@ import upload from "../middlewares/upload.js";
 import { UserRequest } from "../types.js";
 import { getPostByParam } from "../middlewares/posts.js";
 import { makeStringValidator } from "../helpers/make_validators.js";
+import { commentOnPost } from "../controllers/comments.js";
 const router = express.Router();
 
 router.post(
@@ -27,9 +27,9 @@ router.get("/", getPosts);
 router.get("/:id", getPostByParam, (req: UserRequest, res) =>
   res.json({ post: req.context.post })
 );
-router.post("/:id/like", auth, getPostByParam, likePost);
+router.post("/:id/likes", auth, getPostByParam, likePost);
 router.post(
-  "/:id/comment",
+  "/:id/comments",
   auth,
   getPostByParam,
   makeStringValidator("comment", { min: 3, max: 200 }),
