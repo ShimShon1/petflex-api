@@ -10,17 +10,23 @@ export async function getPostByParam(
   next: express.NextFunction
 ) {
   try {
-    if (!isObjectIdOrHexString(req.params.id)) {
+    if (!isObjectIdOrHexString(req.params.postId)) {
       return res.status(404).json({
         errors: [{ msg: "post not found, id is probably invalid" }],
       });
     }
-    const post = await Post.findOne({ _id: req.params.id }).populate({
+    const post = await Post.findOne({
+      _id: req.params.postId,
+    }).populate({
       path: "comments",
       populate: {
-        path: "user",
-        model: "User",
-        select: "username ",
+        path: "replies",
+        model: "Reply",
+        populate: {
+          path: "user",
+          select: "username",
+          model: "User",
+        },
       },
     });
     if (post === null) {
