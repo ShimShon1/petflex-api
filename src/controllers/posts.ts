@@ -2,7 +2,7 @@ import express from "express";
 import Post from "../models/Post.js";
 import { isObjectIdOrHexString } from "mongoose";
 import { UserRequest } from "../types.js";
-import Reply from "../models/Reply.js";
+import Reply from "../models/Comment.js";
 
 export async function postPosts(
   req: UserRequest,
@@ -64,45 +64,4 @@ export async function likePost(
   } catch (error) {
     next(error);
   }
-}
-
-export async function reply(
-  req: UserRequest,
-  res: express.Response,
-  next: express.NextFunction
-) {
-  //find comment, then add validated reply to it
-  const { post, user } = req.context;
-  if (!isObjectIdOrHexString(req.params.commentId)) {
-    return res.status(404).json({
-      errors: [{ msg: "comment not found, id is probably invalid" }],
-    });
-  }
-  const comments = post.comments;
-  if (!comments.length) {
-    return res.status(404).json({
-      errors: [
-        { msg: "no comments on post, perhaps they got deleted" },
-      ],
-    });
-  }
-  const comment = comments.find(
-    (c: any) => c._id == req.params.commentId
-  );
-
-  if (!comment) {
-    return res.status(404).json({
-      errors: [{ msg: "comment not found" }],
-    });
-  }
-  const reply = new Reply({
-    user: user._id,
-    comment: req.body.comment,
-  });
-
-  reply.save();
-
-  comment.replies.push(reply._id);
-  post.save();
-  return res.json({ comment, reply, post });
 }

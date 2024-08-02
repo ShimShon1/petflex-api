@@ -1,6 +1,6 @@
 import mongoose, { Types } from "mongoose";
 import { genders, petTypes } from "../types.js";
-import { CommentSchema } from "./Reply.js";
+import { CommentSchema } from "./Comment.js";
 import calcAge from "../helpers/calcAge.js";
 
 const PostSchema = new mongoose.Schema({
@@ -29,7 +29,7 @@ const PostSchema = new mongoose.Schema({
     required: true,
     enum: petTypes,
   },
-  comments: [CommentSchema],
+  comments: [{ type: Types.ObjectId, ref: "Comment" }],
   likes: [{ type: Types.ObjectId, ref: "User" }],
   createdAt: { type: Date, required: true, default: Date.now },
 });

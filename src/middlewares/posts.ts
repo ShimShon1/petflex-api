@@ -17,18 +17,7 @@ export async function getPostByParam(
     }
     const post = await Post.findOne({
       _id: req.params.postId,
-    }).populate({
-      path: "comments",
-      populate: {
-        path: "replies",
-        model: "Reply",
-        populate: {
-          path: "user",
-          select: "username",
-          model: "User",
-        },
-      },
-    });
+    }).populate("comments");
     if (post === null) {
       return res
         .status(404)
