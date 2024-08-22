@@ -1,15 +1,14 @@
-import multer, { MulterError } from "multer";
+import { MulterError } from "multer";
 import express from "express";
 //simple err handler, so far for multer
 export default (
   err: MulterError | Error,
   req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  res: express.Response
 ) => {
   //if multer error, return custom message, otherwise just 500
   try {
-    if (err instanceof multer.MulterError) {
+    if (err instanceof MulterError) {
       console.log(err);
       const status = err.storageErrors.length
         ? err.storageErrors[0]["http_code"]

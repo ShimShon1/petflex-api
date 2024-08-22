@@ -12,8 +12,14 @@ export default function validate(
 ) {
   let errors: Result<ValidationError> | ValidationError[] =
     validationResult(req);
+
   if (!errors.isEmpty()) {
-    return res.status(400).json({ msg: "error", errors });
+    return res
+      .status(400)
+      .json({
+        msg: "field validation error",
+        errors: errors.array(),
+      });
   } else {
     next();
   }

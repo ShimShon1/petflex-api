@@ -13,7 +13,7 @@ export async function commentOnPost(
     const { user, post } = req.context;
     const comment = new Comment({
       user: user._id,
-      content: req.body.comment,
+      content: req.body.content,
     });
     await comment.save();
     post.comments.push(comment._id);
@@ -30,36 +30,42 @@ export async function reply(
   res: express.Response,
   next: express.NextFunction
 ) {
-  //find comment, then add validated reply to it
-  const { post, user } = req.context;
-  if (!isObjectIdOrHexString(req.params.commentId)) {
-    return res.status(404).json({
-      errors: [{ msg: "comment not found, id is probably invalid" }],
+  try {
+    //find comment, then add validated reply to it
+    const { post, user } = req.context;
+    if (!isObjectIdOrHexString(req.params.commentId)) {
+      return res.status(404).json({
+        errors: [
+          { msg: "comment not found, id is probably invalid" },
+        ],
+      });
+    }
+    const comments = post.comments;
+    if (!comments.length) {
+      return res.status(404).json({
+        errors: [
+          { msg: "no comments on post, perhaps they got deleted" },
+        ],
+      });
+    }
+    const comment = await Comment.findById(req.params.commentId);
+    if (comment == null) {
+      return res.status(404).json({
+        errors: [{ msg: "comment not found" }],
+      });
+    }
+    const reply = new Comment({
+      user: user._id,
+      content: req.body.content,
     });
-  }
-  const comments = post.comments;
-  if (!comments.length) {
-    return res.status(404).json({
-      errors: [
-        { msg: "no comments on post, perhaps they got deleted" },
-      ],
-    });
-  }
-  const comment = await Comment.findById(req.params.commentId);
-  if (comment == null) {
-    return res.status(404).json({
-      errors: [{ msg: "comment not found" }],
-    });
-  }
-  const reply = new Comment({
-    user: user._id,
-    content: req.body.content,
-  });
 
-  await reply.save();
+    await reply.save();
 
-  comment.replies.push(reply._id);
-  await post.save();
-  await comment.save();
-  return res.json({ comment, reply, post });
+    comment.replies.push(reply._id);
+    await post.save();
+    await comment.save();
+    return res.json({ comment });
+  } catch (error) {
+    next(error);
+  }
 }

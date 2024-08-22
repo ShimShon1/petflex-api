@@ -24,7 +24,7 @@ export async function register(
       password: password,
     });
     newUser.save();
-    return res.status(201).json({ newUser });
+    return res.status(201).json({ msg: "User created" });
   } catch (error) {
     return res
       .status(500)
@@ -40,11 +40,11 @@ export async function login(
   try {
     const user = await User.findOne({ username: req.body.username });
     if (user !== null) {
-      const result = await bcrypt.compare(
+      const isPassCorrect = await bcrypt.compare(
         req.body.password,
         user.password
       );
-      if (!result) {
+      if (!isPassCorrect) {
         return res
           .status(400)
           .json({ errors: { msg: "Wrong password" } });
@@ -53,14 +53,13 @@ export async function login(
         const token = jwt.sign(payload, process.env.JWT_SECRET!, {
           expiresIn: "2d",
         });
-        return res.json({ payload, token });
+        return res.json({ token });
       }
     } else {
       return res
         .status(400)
         .json({ errors: { msg: "Wrong username" } });
     }
-    return res.json({ user });
   } catch (error) {
     console.log(error);
     return res

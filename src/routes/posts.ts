@@ -1,5 +1,6 @@
-import express from "express";
+import { Router } from "express";
 import {
+  getFullPost,
   getPosts,
   likePost,
   postPosts,
@@ -8,13 +9,13 @@ import auth from "../middlewares/auth.js";
 import { postValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
 import upload from "../middlewares/upload.js";
-import { UserRequest } from "../types.js";
 import { getPostByParam } from "../middlewares/posts.js";
 import { makeStringValidator } from "../helpers/make_validators.js";
 import { commentOnPost, reply } from "../controllers/comments.js";
-import { isObjectIdOrHexString } from "mongoose";
-import Reply from "../models/Comment.js";
-const router = express.Router();
+
+const router = Router();
+
+router.get("/", getPosts);
 
 router.post(
   "/",
@@ -25,11 +26,10 @@ router.post(
   postPosts
 );
 
-router.get("/", getPosts);
-router.get("/:postId", getPostByParam, (req: UserRequest, res) =>
-  res.json({ post: req.context.post })
-);
+router.get("/:postId", getFullPost);
+
 router.post("/:postId/likes", auth, getPostByParam, likePost);
+
 router.post(
   "/:postId/comments",
   auth,

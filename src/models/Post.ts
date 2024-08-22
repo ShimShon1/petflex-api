@@ -1,6 +1,5 @@
 import mongoose, { Types } from "mongoose";
 import { genders, petTypes } from "../types.js";
-import { CommentSchema } from "./Comment.js";
 import calcAge from "../helpers/calcAge.js";
 
 const PostSchema = new mongoose.Schema({

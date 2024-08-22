@@ -1,12 +1,12 @@
 import { body } from "express-validator";
 
 export function makeStringValidator(
-  name: string,
+  field: string,
   length?: { min: number; max: number }
 ) {
-  const middleware = body(name)
+  const middleware = body(field)
     .isString()
-    .withMessage(`${name} must be a string`)
+    .withMessage(`${field} must be a string`)
     .trim();
 
   if (!length) return middleware;
@@ -14,6 +14,6 @@ export function makeStringValidator(
   return middleware
     .isLength({ min: length.min, max: length.max })
     .withMessage(
-      `${name} must contain between ${length.min} and ${length.max} characters`
+      `${field} must contain between ${length.min} and ${length.max} characters`
     );
 }

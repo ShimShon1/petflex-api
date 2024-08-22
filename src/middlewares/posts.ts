@@ -15,9 +15,9 @@ export async function getPostByParam(
         errors: [{ msg: "post not found, id is probably invalid" }],
       });
     }
-    const post = await Post.findOne({
-      _id: req.params.postId,
-    }).populate("comments");
+    const post = await Post.findOne({ _id: req.params.postId });
+
+    // console.log(post, req.params.postId);
     if (post === null) {
       return res
         .status(404)

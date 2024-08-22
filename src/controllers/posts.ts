@@ -1,8 +1,7 @@
 import express from "express";
 import Post from "../models/Post.js";
-import { isObjectIdOrHexString } from "mongoose";
 import { UserRequest } from "../types.js";
-import Reply from "../models/Comment.js";
+import { isObjectIdOrHexString } from "mongoose";
 
 export async function postPosts(
   req: UserRequest,
@@ -54,13 +53,39 @@ export async function likePost(
       post.likes = post.likes.filter(
         (l: string) => l.toString() !== id
       );
-      await post.save();
-      return res.status(200).json({ likes: post.likes });
     } else {
       post.likes.push(id);
-      await post.save();
-      return res.status(200).json({ likes: post.likes });
     }
+
+    await post.save();
+    return res.status(200).json({ likes: post.likes });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getFullPost(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  //get post with all replies
+  try {
+    if (!isObjectIdOrHexString(req.params.postId)) {
+      return res.status(404).json({
+        errors: [{ msg: "Post not found, id is probably invalid" }],
+      });
+    }
+    const post = await Post.findOne({
+      _id: req.params.postId,
+    })
+      .populate("comments")
+      .populate("user", "username");
+
+    if (post == null) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+    return res.json(post);
   } catch (error) {
     next(error);
   }
