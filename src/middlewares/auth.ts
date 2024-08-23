@@ -7,7 +7,7 @@ export default async function auth(
   next: express.NextFunction
 ) {
   const token = req.headers["authorization"]?.split(" ")[1];
-  if (token === undefined) {
+  if (token == undefined) {
     return res.status(401).json({
       errors: [{ msg: "no token provided or has no bearer" }],
     });

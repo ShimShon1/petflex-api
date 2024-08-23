@@ -4,10 +4,12 @@ import express from "express";
 export default (
   err: MulterError | Error,
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: express.NextFunction
 ) => {
   //if multer error, return custom message, otherwise just 500
   try {
+    console.log("error handling!");
     if (err instanceof MulterError) {
       console.log(err);
       const status = err.storageErrors.length
@@ -18,12 +20,12 @@ export default (
         errors: [{ msg: err.message || "there was an error" }],
       });
     }
-    return res
-      .status(500)
-      .json({ errors: [{ msg: "there was an error" }] });
+    return res.status(500).json({
+      errors: [{ msg: err.message || "there was an error" }],
+    });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ errors: [{ msg: "there was an error" }] });
+    return res.status(500).json({
+      errors: [{ msg: "there was an error" }],
+    });
   }
 };

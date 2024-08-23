@@ -13,7 +13,7 @@ export async function commentOnPost(
     const { user, post } = req.context;
     const comment = new Comment({
       user: user._id,
-      content: req.body.content,
+      contentt: req.body.content,
     });
     await comment.save();
     post.comments.push(comment._id);
