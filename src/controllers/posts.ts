@@ -1,7 +1,9 @@
 import express from "express";
 import Post from "../models/Post.js";
+import Comment from "../models/Comment.js";
+
 import { UserRequest } from "../types.js";
-import { isObjectIdOrHexString } from "mongoose";
+import mongoose, { isObjectIdOrHexString } from "mongoose";
 
 export async function postPosts(
   req: UserRequest,
@@ -15,7 +17,6 @@ export async function postPosts(
       image: req.file?.path,
       gender: req.body.gender,
       birthDate: req.body.birthDate,
-      comments: req.body.comments,
       petType: req.body.petType,
     });
     await post.save();
@@ -76,17 +77,67 @@ export async function getFullPost(
         errors: [{ msg: "Post not found, id is probably invalid" }],
       });
     }
-    const post = await Post.findOne({
-      _id: req.params.postId,
-    })
-      .populate("comments")
-      .populate("user", "username");
+    const post = await Post.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(req.params.postId),
+        },
+      },
+    ]);
 
-    if (post == null) {
+    const comments = await Comment.find({
+      postId: req.params.postId,
+    });
+    console.log(comments);
+    if (!post.length) {
       return res.status(404).json({ msg: "Post not found" });
     }
-    return res.json(post);
+    return res.json({ post: post[0], comments });
   } catch (error) {
+    next(error);
+  }
+}
+
+async function fetchReplies(commentId: mongoose.Types.ObjectId) {
+  const replies = await Comment.find({ parentId: commentId }).exec();
+  const repliesWithNestedReplies = [];
+
+  for (const reply of replies) {
+    const replyObject: any = reply.toObject();
+    replyObject.replies = await fetchReplies(reply._id);
+    repliesWithNestedReplies.push(replyObject);
+  }
+
+  return repliesWithNestedReplies;
+}
+
+export async function getPostWithAllComments(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    const postId = new mongoose.Types.ObjectId(req.params.postId);
+
+    const topLevelComments = await Comment.find({
+      postId: postId,
+      parentId: null,
+    }).exec();
+
+    const topLevelCommentsWithReplies = [];
+
+    for (const comment of topLevelComments) {
+      const commentObject: any = comment.toObject();
+      commentObject.replies = await fetchReplies(comment._id);
+      topLevelCommentsWithReplies.push(commentObject);
+    }
+
+    res.json({
+      postId: postId,
+      comments: topLevelCommentsWithReplies,
+    });
+  } catch (error) {
+    console.error(error);
     next(error);
   }
 }

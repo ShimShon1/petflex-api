@@ -1,6 +1,18 @@
 import mongoose, { Types } from "mongoose";
 
 export const CommentSchema = new mongoose.Schema({
+  postId: {
+    type: Types.ObjectId,
+    ref: "Post",
+    required: true,
+  },
+
+  parentId: {
+    type: Types.ObjectId || null,
+    ref: "Comment",
+    default: null,
+  },
+  hasReplies: { type: Boolean, default: false },
   user: { type: Types.ObjectId, ref: "User", required: true },
   content: {
     type: String,
@@ -8,7 +20,6 @@ export const CommentSchema = new mongoose.Schema({
     minLength: 3,
     maxLength: 1000,
   },
-  replies: [{ type: Types.ObjectId, ref: "Comment" }],
   createdAt: { type: Date, required: true, default: Date.now },
 });
 

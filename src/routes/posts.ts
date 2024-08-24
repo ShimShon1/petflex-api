@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getFullPost,
+  getPostWithAllComments,
   getPosts,
   likePost,
   postPosts,
@@ -26,18 +27,9 @@ router.post(
   postPosts
 );
 
-router.get("/:postId", getFullPost);
+router.get("/:postId", getPostWithAllComments);
 
 router.post("/:postId/likes", auth, getPostByParam, likePost);
-
-router.post(
-  "/:postId/comments",
-  auth,
-  getPostByParam,
-  makeStringValidator("content", { min: 3, max: 200 }),
-  validate,
-  commentOnPost
-);
 
 //post reply to a comment
 router.post(

@@ -28,7 +28,6 @@ const PostSchema = new mongoose.Schema({
     required: true,
     enum: petTypes,
   },
-  comments: [{ type: Types.ObjectId, ref: "Comment" }],
   likes: [{ type: Types.ObjectId, ref: "User" }],
   createdAt: { type: Date, required: true, default: Date.now },
 });
