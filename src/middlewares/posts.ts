@@ -27,8 +27,6 @@ export async function getPostByParam(
     next();
     return;
   } catch (error) {
-    return res
-      .status(500)
-      .json({ errors: [{ msg: "There was an error" }] });
+    next(error);
   }
 }
