@@ -81,10 +81,13 @@ export async function getPostWithAllComments(
     });
 
     const topLevelCommentsWithReplies = [];
-
     for (const comment of topLevelComments) {
       const commentObject: any = comment.toObject();
-      commentObject.replies = await fetchReplies(comment._id);
+      if (commentObject.hasReplies) {
+        commentObject.replies = await fetchReplies(comment._id);
+      } else {
+        commentObject.replies = [];
+      }
       topLevelCommentsWithReplies.push(commentObject);
     }
     post = post.toObject();
