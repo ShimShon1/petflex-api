@@ -3,7 +3,7 @@ import { getUser, login, register } from "../controllers/users.js";
 import { userValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
 import auth from "../middlewares/auth.js";
-import { getPostByParam } from "../middlewares/posts.js";
+import { getPostByParam } from "../middlewares/getPostByParam.js";
 import { makeStringValidator } from "../helpers/make_validators.js";
 import { postComment } from "../controllers/comments.js";
 

@@ -15,7 +15,9 @@ export async function postPosts(
       name: req.body.name,
       user: req.context.user._id,
       description: req.body.description,
-      image: req.file?.path,
+      // image: req.file?.path,
+      image:
+        "https://res.cloudinary.com/dg64qnagr/image/upload/v1724680353/pets/xiqrnrlshj0chos8hvy9.webp",
       gender: req.body.gender,
       birthDate: req.body.birthDate,
       petType: req.body.petType,
@@ -96,6 +98,23 @@ export async function getPostWithAllComments(
     res.status(200).json(post);
   } catch (error) {
     console.error(error);
+    next(error);
+  }
+}
+
+export async function deletePost(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    const postId = req.params.postId;
+    await Comment.deleteMany({
+      postId: postId,
+    });
+    await Post.findByIdAndDelete(postId);
+    res.status(200).json({ msg: "Post deleted" });
+  } catch (error) {
     next(error);
   }
 }

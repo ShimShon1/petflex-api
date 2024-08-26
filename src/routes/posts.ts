@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  deletePost,
   getPostWithAllComments,
   getPosts,
   likePost,
@@ -9,7 +10,8 @@ import auth from "../middlewares/auth.js";
 import { postValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
 import upload from "../middlewares/upload.js";
-import { getPostByParam } from "../middlewares/posts.js";
+import { getPostByParam } from "../middlewares/getPostByParam.js";
+import checkSameUser from "../middlewares/checkSameUser.js";
 
 const router = Router();
 
@@ -27,5 +29,13 @@ router.post(
 router.get("/:postId", getPostByParam, getPostWithAllComments);
 
 router.post("/:postId/likes", auth, getPostByParam, likePost);
+
+router.delete(
+  "/:postId",
+  auth,
+  getPostByParam,
+  checkSameUser,
+  deletePost
+);
 
 export default router;
