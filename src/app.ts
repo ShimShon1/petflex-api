@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import indexRouter from "./routes/index.js";
 import postsRouter from "./routes/posts.js";
+import usersRouter from "./routes/users.js";
+
 import error_handler from "./middlewares/error_handler.js";
 const app = express();
 app.use(express.json());
@@ -13,6 +15,8 @@ mongoose
 
 app.use("/", indexRouter);
 app.use("/posts", postsRouter);
+app.use("/users", usersRouter);
+
 app.use(error_handler);
 
 app.listen(3000);

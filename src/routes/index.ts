@@ -1,9 +1,8 @@
 import express from "express";
-import { getUser, login, register } from "../controllers/users.js";
+import { login, register } from "../controllers/users.js";
 import { userValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
 import auth from "../middlewares/auth.js";
-import { getPostByParam } from "../middlewares/getPostByParam.js";
 import { makeStringValidator } from "../helpers/make_validators.js";
 import { postComment } from "../controllers/comments.js";
 
@@ -15,11 +14,8 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post("/users", userValidation, validate, register);
-
-router.get("/users", auth, getUser);
-
-router.post("/auth/login", userValidation, validate, login);
+//get user from auth header
+router.post("/login", userValidation, validate, login);
 
 router.post(
   "/comments",

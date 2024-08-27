@@ -3,7 +3,7 @@ import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 
 import { UserRequest } from "../types.js";
-import mongoose, { isObjectIdOrHexString } from "mongoose";
+import mongoose from "mongoose";
 import fetchReplies from "../helpers/fetchReplies.js";
 
 export async function postPosts(
@@ -15,9 +15,7 @@ export async function postPosts(
       name: req.body.name,
       user: req.context.user._id,
       description: req.body.description,
-      // image: req.file?.path,
-      image:
-        "https://res.cloudinary.com/dg64qnagr/image/upload/v1724680353/pets/xiqrnrlshj0chos8hvy9.webp",
+      image: req.file?.path,
       gender: req.body.gender,
       birthDate: req.body.birthDate,
       petType: req.body.petType,

@@ -23,12 +23,10 @@ export async function register(
       username: req.body.username,
       password: password,
     });
-    newUser.save();
+    await newUser.save();
     return res.status(201).json({ msg: "User created" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ errors: { msg: "There was an error" } });
+    next(error);
   }
 }
 
@@ -50,10 +48,11 @@ export async function login(
           .json({ errors: { msg: "Wrong password" } });
       } else {
         const payload = user.toObject();
+        console.log(payload);
         const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-          expiresIn: "2d",
+          expiresIn: "7d",
         });
-        return res.json({ token });
+        return res.status(200).json({ token });
       }
     } else {
       return res
@@ -62,14 +61,20 @@ export async function login(
     }
   } catch (error) {
     console.log(error);
-    return res
-      .status(500)
-      .json({ errors: { msg: "There was an error" } });
+    next(error);
   }
 }
 
-export function getUser(req: UserRequest, res: express.Response) {
-  const { password, iat, exp, ...user } = req.context.user;
-  delete user.__v;
-  res.json({ user });
+export function getUser(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    const { password, iat, exp, ...user } = req.context.user;
+    delete user.__v;
+    res.status(200).json({ user });
+  } catch (error) {
+    next(error);
+  }
 }
