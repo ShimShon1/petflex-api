@@ -48,7 +48,6 @@ export async function login(
           .json({ errors: { msg: "Wrong password" } });
       } else {
         const payload = user.toObject();
-        console.log(payload);
         const token = jwt.sign(payload, process.env.JWT_SECRET!, {
           expiresIn: "7d",
         });

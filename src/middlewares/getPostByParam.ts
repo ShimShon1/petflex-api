@@ -19,7 +19,6 @@ export async function getPostByParam(
       _id: req.params.postId,
     });
 
-    // console.log(post, req.params.postId);
     if (post === null) {
       return res
         .status(404)

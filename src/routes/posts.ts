@@ -1,17 +1,19 @@
 import { Router } from "express";
-import {
-  deletePost,
-  getPostWithAllComments,
-  getPosts,
-  likePost,
-  postPosts,
-} from "../controllers/posts.js";
 import auth from "../middlewares/auth.js";
 import { postValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
 import upload from "../middlewares/upload.js";
 import { getPostByParam } from "../middlewares/getPostByParam.js";
 import checkSameUser from "../middlewares/checkSameUser.js";
+import {
+  getPostWithAllComments,
+  getPosts,
+} from "../controllers/getPosts.js";
+import {
+  deletePost,
+  likePost,
+  postPosts,
+} from "../controllers/postPosts.js";
 
 const router = Router();
 
