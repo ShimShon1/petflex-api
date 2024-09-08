@@ -16,7 +16,7 @@ export async function postComment(
       user: user._id,
       content: req.body.content,
       parentId: req.body.parentId,
-      postId: req.body.postId,
+      postId: req.params.postId,
     });
     await comment.save();
     if (req.body.parentId) {
@@ -27,7 +27,7 @@ export async function postComment(
       parent.hasReplies = true;
       parent.save();
     }
-    res.json({ msg: "comment posted" });
+    next();
   } catch (error) {
     next(error);
   }
