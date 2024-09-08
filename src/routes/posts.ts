@@ -5,10 +5,7 @@ import validate from "../middlewares/validate.js";
 import upload from "../middlewares/upload.js";
 import { getPostByParam } from "../middlewares/getPostByParam.js";
 import checkSameUser from "../middlewares/checkSameUser.js";
-import {
-  getPostWithAllComments,
-  getPosts,
-} from "../controllers/getPosts.js";
+import { getPost, getPosts } from "../controllers/getPosts.js";
 import {
   deletePost,
   likePost,
@@ -28,7 +25,7 @@ router.post(
   postPosts
 );
 
-router.get("/:postId", getPostByParam, getPostWithAllComments);
+router.get("/:postId", getPostByParam, getPost);
 
 router.post("/:postId/likes", auth, getPostByParam, likePost);
 
