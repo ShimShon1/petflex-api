@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { getComments, postComment } from "../controllers/comments.js";
+import {
+  deleteComment,
+  getComments,
+  postComment,
+} from "../controllers/comments.js";
 import validate from "../middlewares/validate.js";
 import { makeStringValidator } from "../helpers/make_validators.js";
 import auth from "../middlewares/auth.js";
@@ -16,5 +20,7 @@ router.post(
 );
 
 router.get("/:postId", getComments);
+
+router.delete("/:commentId", deleteComment);
 
 export default router;

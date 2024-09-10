@@ -13,6 +13,7 @@ export const CommentSchema = new mongoose.Schema({
     default: null,
   },
   hasReplies: { type: Boolean, default: false },
+  availble: { type: Boolean, default: true },
   user: { type: Types.ObjectId, ref: "User", required: true },
   content: {
     type: String,

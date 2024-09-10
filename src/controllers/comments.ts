@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { isObjectIdOrHexString } from "mongoose";
 import Comment from "../models/Comment.js";
 import { UserRequest } from "../types.js";
 import express from "express";
@@ -61,6 +61,63 @@ export async function getComments(
     res.status(200).json(comments);
   } catch (error) {
     console.error(error);
+    next(error);
+  }
+}
+
+export async function deleteComment(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    //get comment or error handle if id is incorrect
+    if (!isObjectIdOrHexString(req.params.commentId)) {
+      return res
+        .status(404)
+        .json({ errors: [{ msg: "invalid id, comment not found" }] });
+    }
+    const comment = await Comment.findById(req.params.commentId);
+    if (!comment) {
+      return res.status(404).json({
+        errors: [{ msg: "comment not found, probably deleted" }],
+      });
+    }
+    // console.log(comment);
+
+    // check for replies, delete if it doesn't have any
+    if (!comment.hasReplies) {
+      await comment.deleteOne();
+      res.json({ msg: "deleted comment" });
+      //check if parent comment has more replies, if it doesnt, change parent hasReplies prop
+      if (comment.parentId) {
+        const hasMoreReplies = await Comment.exists({
+          parentId: comment.parentId,
+        });
+        if (!hasMoreReplies) {
+          const parentComment = await Comment.findById(
+            comment.parentId
+          );
+          if (parentComment) {
+            //if unavilable, delete.
+            if (!parentComment.availble) {
+              await parentComment.deleteOne();
+              return;
+            }
+            parentComment.hasReplies = false;
+            parentComment.save();
+          }
+        }
+        return;
+      }
+    } else if (comment.hasReplies) {
+      //if comment does have replies, modify
+      comment.content = "this comment has been deleted";
+      comment.availble = false;
+      await comment.save();
+      return res.json({ msg: "has replies, modified" });
+    }
+  } catch (error) {
     next(error);
   }
 }
