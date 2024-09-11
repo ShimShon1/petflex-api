@@ -9,7 +9,6 @@ export default (
 ) => {
   //if multer error, return custom message, otherwise just 500
   try {
-    console.log(err);
     console.log("error handling!");
     if (err instanceof MulterError) {
       console.log(err);
@@ -21,6 +20,7 @@ export default (
         errors: [{ msg: err.message || "there was an error" }],
       });
     }
+
     return res.status(500).json({
       errors: [{ msg: err.message || "there was an error" }],
     });

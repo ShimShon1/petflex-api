@@ -25,7 +25,7 @@ export async function postComment(
         return res.status(404).json({ msg: "comment not found" });
       }
       parent.hasReplies = true;
-      parent.save();
+      await parent.save();
     }
     next();
   } catch (error) {
@@ -44,7 +44,7 @@ export async function getComments(
     const topLevelComments = await Comment.find({
       postId: postId,
       parentId: null,
-    });
+    }).populate("user", "username");
 
     const topLevelCommentsWithReplies = [];
     for (const comment of topLevelComments) {
@@ -105,7 +105,7 @@ export async function deleteComment(
           );
 
           parentComment!.hasReplies = false;
-          parentComment!.save();
+          await parentComment!.save();
         }
       }
     } else if (comment.hasReplies) {
