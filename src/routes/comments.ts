@@ -21,6 +21,11 @@ router.post(
 
 router.get("/:postId", getComments);
 
-router.delete("/:commentId", deleteComment);
+router.delete(
+  "/:postId/:commentId",
+  auth,
+  deleteComment,
+  getComments
+);
 
 export default router;

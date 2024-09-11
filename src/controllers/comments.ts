@@ -83,12 +83,17 @@ export async function deleteComment(
         errors: [{ msg: "comment not found, probably deleted" }],
       });
     }
+    console.log(req.context.user._id, String(comment.user));
+    if (String(req.context.user._id) !== String(comment.user)) {
+      return res.status(403).json({
+        errors: [{ msg: "Not the same user" }],
+      });
+    }
     // console.log(comment);
 
     // check for replies, delete if it doesn't have any
     if (!comment.hasReplies) {
       await comment.deleteOne();
-      res.json({ msg: "deleted comment" });
       //check if parent comment has more replies, if it doesnt, change parent hasReplies prop
       if (comment.parentId) {
         const hasMoreReplies = await Comment.exists({
@@ -98,25 +103,19 @@ export async function deleteComment(
           const parentComment = await Comment.findById(
             comment.parentId
           );
-          if (parentComment) {
-            //if unavilable, delete.
-            if (!parentComment.availble) {
-              await parentComment.deleteOne();
-              return;
-            }
-            parentComment.hasReplies = false;
-            parentComment.save();
-          }
+
+          parentComment!.hasReplies = false;
+          parentComment!.save();
         }
-        return;
       }
     } else if (comment.hasReplies) {
       //if comment does have replies, modify
       comment.content = "this comment has been deleted";
       comment.availble = false;
       await comment.save();
-      return res.json({ msg: "has replies, modified" });
     }
+
+    return next();
   } catch (error) {
     next(error);
   }
