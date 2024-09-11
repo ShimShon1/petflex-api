@@ -3,6 +3,7 @@ import Comment from "../models/Comment.js";
 import { UserRequest } from "../types.js";
 import express from "express";
 import fetchReplies from "../helpers/fetchReplies.js";
+import Post from "../models/Post.js";
 
 //create top level comments
 export async function postComment(
@@ -27,6 +28,13 @@ export async function postComment(
       parent.hasReplies = true;
       await parent.save();
     }
+
+    //increase comments count by 1
+    await Post.updateOne(
+      { _id: req.params.postId },
+      { $inc: { commentsCount: 1 } }
+    );
+
     next();
   } catch (error) {
     next(error);
@@ -78,11 +86,16 @@ export async function deleteComment(
         .json({ errors: [{ msg: "invalid id, comment not found" }] });
     }
     const comment = await Comment.findById(req.params.commentId);
-    if (!comment) {
+    if (!comment || comment.available === false) {
       return res.status(404).json({
-        errors: [{ msg: "comment not found, probably deleted" }],
+        errors: [
+          {
+            msg: "comment not found, probably deleted or unavailable",
+          },
+        ],
       });
     }
+
     console.log(req.context.user._id, String(comment.user));
     if (String(req.context.user._id) !== String(comment.user)) {
       return res.status(403).json({
@@ -111,10 +124,14 @@ export async function deleteComment(
     } else if (comment.hasReplies) {
       //if comment does have replies, modify
       comment.content = "this comment has been deleted";
-      comment.availble = false;
+      comment.available = false;
       await comment.save();
     }
-
+    //decrease comments count by 1
+    await Post.updateOne(
+      { _id: comment.postId },
+      { $inc: { commentsCount: -1 } }
+    );
     return next();
   } catch (error) {
     next(error);

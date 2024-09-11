@@ -10,8 +10,8 @@ export default (
   //if multer error, return custom message, otherwise just 500
   try {
     console.log("error handling!");
+    console.log(err);
     if (err instanceof MulterError) {
-      console.log(err);
       const status = err.storageErrors.length
         ? err.storageErrors[0]["http_code"]
         : 400;

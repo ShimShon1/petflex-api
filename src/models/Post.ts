@@ -29,15 +29,16 @@ const PostSchema = new mongoose.Schema({
     enum: petTypes,
   },
   likes: [{ type: Types.ObjectId, ref: "User" }],
+  commentsCount: { type: Number, default: 0 },
   createdAt: { type: Date, required: true, default: Date.now },
 });
 
 PostSchema.virtual("likesCount").get(function () {
-  return this.likes.length;
+  return this.likes?.length;
 });
 
 PostSchema.virtual("age").get(function () {
-  return calcAge(this.birthDate);
+  return this?.birthDate && calcAge(this.birthDate);
 });
 
 PostSchema.set("toJSON", { virtuals: true });
