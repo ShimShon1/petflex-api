@@ -45,7 +45,7 @@ export async function login(
       if (!isPassCorrect) {
         return res
           .status(400)
-          .json({ errors: { msg: "Wrong password" } });
+          .json({ errors: [{ msg: "Wrong password" }] });
       } else {
         const payload = user.toObject();
         const token = jwt.sign(payload, process.env.JWT_SECRET!, {
@@ -63,7 +63,7 @@ export async function login(
     } else {
       return res
         .status(400)
-        .json({ errors: { msg: "Wrong username" } });
+        .json({ errors: [{ msg: "Wrong username" }] });
     }
   } catch (error) {
     console.log(error);
@@ -79,7 +79,7 @@ export function getUser(
   try {
     const { password, iat, exp, ...user } = req.context.user;
     delete user.__v;
-    res.status(200).json({ user });
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }

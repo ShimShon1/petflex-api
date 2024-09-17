@@ -14,12 +14,10 @@ export default function validate(
     validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res
-      .status(400)
-      .json({
-        msg: "field validation error",
-        errors: errors.array(),
-      });
+    return res.status(400).json({
+      msg: "field validation error",
+      errors: errors.array(),
+    });
   } else {
     next();
   }
