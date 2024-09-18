@@ -8,6 +8,8 @@ export async function getPosts(
   next: express.NextFunction
 ) {
   try {
+    console.log("bbbbbbbbb");
+
     const posts = await Post.find().populate("user", "username");
     res.status(200).json(posts);
   } catch (error) {

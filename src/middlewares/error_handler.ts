@@ -7,26 +7,10 @@ export default (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  //if multer error, return custom message, otherwise just 500
-  try {
-    console.log("error handling!");
-    console.log(err);
-    if (err instanceof MulterError) {
-      const status = err.storageErrors.length
-        ? err.storageErrors[0]["http_code"]
-        : 400;
+  console.log("error handling!");
+  console.log(err);
 
-      return res.status(status).json({
-        errors: [{ msg: err.message || "there was an error" }],
-      });
-    }
-
-    return res.status(500).json({
-      errors: [{ msg: err.message || "there was an error" }],
-    });
-  } catch (err) {
-    return res.status(500).json({
-      errors: [{ msg: "there was an error" }],
-    });
-  }
+  return res.status(500).json({
+    errors: [{ msg: err.message || "there was an error" }],
+  });
 };
