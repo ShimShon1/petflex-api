@@ -16,7 +16,7 @@ const storage = new CloudinaryStorage({
   params: async () => {
     return {
       folder: "pets",
-      format: "jpeg",
+      format: "webp",
     };
   },
 });

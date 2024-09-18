@@ -12,7 +12,7 @@
   "name": "petflex",
   "description": "A little pet \"social media\" app backend",
   "version": "1.0.0",
-  "main": "src/app.ts",
+  "main": "/app.js",
   "type": "module",
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -31,6 +31,7 @@
   },
   "scripts": {
     "build": "tsc ",
+    "start": "node dist/app.js",
     "dev": "tsx --watch src/app.ts"
   },
   "repository": {
