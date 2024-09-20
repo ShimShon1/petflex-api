@@ -1,3 +1,4 @@
+import { destroy } from "../middlewares/upload.js";
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import { UserRequest } from "../types.js";
@@ -7,11 +8,13 @@ export async function postPosts(
   res: express.Response
 ) {
   try {
+    console.log("file:", req.file);
     const post = new Post({
       name: req.body.name,
       user: req.context.user._id,
       description: req.body.description,
       image: req.file?.path,
+      imageName: req.file?.filename,
       gender: req.body.gender,
       birthDate: req.body.birthDate,
       petType: req.body.petType,
@@ -58,6 +61,7 @@ export async function deletePost(
     await Comment.deleteMany({
       postId: postId,
     });
+    destroy(req.context.post.imageName);
     await Post.findByIdAndDelete(postId);
     res.status(200).json({ msg: "Post deleted" });
   } catch (error) {

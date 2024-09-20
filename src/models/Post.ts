@@ -17,6 +17,12 @@ const PostSchema = new mongoose.Schema({
     minLength: 3,
     maxLength: 1200,
   },
+  imageName: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 1200,
+  },
   gender: {
     type: String,
     required: true,

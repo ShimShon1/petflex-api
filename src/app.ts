@@ -25,6 +25,5 @@ app.use("/comments", commentsRouter);
 app.use(error_handler);
 
 app.listen(PORT, () => {
-  console.log("aaaaaaa");
   console.log(`App running on http://localhost:${PORT}/`);
 });
