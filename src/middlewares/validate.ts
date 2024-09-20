@@ -4,6 +4,7 @@ import {
   ValidationError,
   validationResult,
 } from "express-validator";
+import { destroy } from "./upload.js";
 
 export default function validate(
   req: express.Request,
@@ -14,6 +15,9 @@ export default function validate(
     validationResult(req);
 
   if (!errors.isEmpty()) {
+    if (req.file) {
+      destroy(req.file?.filename);
+    }
     return res.status(400).json({
       msg: "field validation error",
       errors: errors.array(),
