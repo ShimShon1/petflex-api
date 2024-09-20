@@ -32,7 +32,7 @@ const petTypeValid = makeStringValidator("petType")
   .isIn(petTypes)
   .withMessage((e) => e + " is not a valid pet type");
 
-const birthValid = body("birthDate")
+const birthValid = makeStringValidator("birthDate")
   .custom((value) => {
     const date = new Date(value);
     if (isNaN(date.getFullYear())) {

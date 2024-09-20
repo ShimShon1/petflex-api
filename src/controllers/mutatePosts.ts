@@ -5,10 +5,10 @@ import { UserRequest } from "../types.js";
 import express from "express";
 export async function postPosts(
   req: UserRequest,
-  res: express.Response
+  res: express.Response,
+  next: express.NextFunction
 ) {
   try {
-    console.log("file:", req.file);
     const post = new Post({
       name: req.body.name,
       user: req.context.user._id,
@@ -22,9 +22,29 @@ export async function postPosts(
     await post.save();
     return res.json({ post });
   } catch (error) {
-    console.log(error);
-    const msg = (error as Error).message;
-    return res.status(500).json({ errors: [{ msg }] });
+    next(error);
+  }
+}
+
+export async function editPost(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    const post = req.context.post;
+    const body = req.body;
+
+    post.name = body.name;
+    post.description = body.description;
+    post.gender = body.gender;
+    post.petType = body.petType;
+    post.birthDate = body.birthDate;
+
+    await post.save();
+    return res.json({ post });
+  } catch (error) {
+    next(error);
   }
 }
 

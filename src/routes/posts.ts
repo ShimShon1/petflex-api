@@ -8,9 +8,10 @@ import checkSameUser from "../middlewares/checkSameUser.js";
 import { getPost, getPosts } from "../controllers/getPosts.js";
 import {
   deletePost,
+  editPost,
   likePost,
   postPosts,
-} from "../controllers/postPosts.js";
+} from "../controllers/mutatePosts.js";
 
 const router = Router();
 
@@ -25,6 +26,15 @@ router.post(
   postPosts
 );
 
+router.put(
+  "/:postId",
+  auth,
+  getPostByParam,
+  checkSameUser,
+  postValidation,
+  validate,
+  editPost
+);
 router.get("/:postId", getPostByParam, getPost);
 
 router.post("/:postId/likes", auth, getPostByParam, likePost);
