@@ -8,10 +8,15 @@ export async function getPosts(
   next: express.NextFunction
 ) {
   try {
-    const posts = await Post.find({}, { imageName: 0 }).populate(
-      "user",
-      "username"
-    );
+    const page = Number(req.query?.page) || 1;
+    //change for actual production to show more for inital page.
+    const limit = 2;
+    const skip = (page - 1) * 2;
+    console.log("skipping", skip);
+    const posts = await Post.find({}, { imageName: 0 })
+      .skip(skip)
+      .limit(limit)
+      .populate("user", "username");
     res.status(200).json(posts);
   } catch (error) {
     next(error);

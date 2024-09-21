@@ -22,16 +22,17 @@ const storage = new CloudinaryStorage({
 });
 
 export function destroy(url: string) {
-  cloudinary.uploader.destroy(url, (result, error) => {
-    if (error) {
-      console.log("error deleting image:", error);
+  cloudinary.uploader.destroy(url, (error, result) => {
+    if (result.result != "ok") {
+      console.log("error deleting image:", result);
+    } else if (result.result == "ok") {
+      console.log(url, " deleted");
     }
     return;
   });
-  console.log("destroyed??");
 }
 
 export default multer({
   storage,
-  limits: { fileSize: 1 * 1024 * 1024 },
+  limits: { fileSize: 3 * 1024 * 1024 },
 });
