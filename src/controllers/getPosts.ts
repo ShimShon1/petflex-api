@@ -8,7 +8,6 @@ export async function getPosts(
   next: express.NextFunction
 ) {
   try {
-    console.log(req.query);
     //sort by?
     let order = Number(req.query.order) || -1;
 
@@ -29,8 +28,8 @@ export async function getPosts(
     //calculate amount of posts to send
     //change for actual production to show more for inital page.
     const page = Number(req.query.page) || 1;
-    const limit = 2;
-    const skip = (page - 1) * 2;
+    const limit = page === 1 ? 4 : 2;
+    const skip = page <= 1 ? 0 : (page - 1) * 2 + 2;
 
     const posts = await Post.find(query, { imageName: 0 })
       .skip(skip)
