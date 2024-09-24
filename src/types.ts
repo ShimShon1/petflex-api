@@ -3,5 +3,12 @@ export type UserRequest = express.Request & {
   context?: any;
 };
 
-export const petTypes = ["dog", "cat", "lizard", "hamster", "rabbit"];
+export const petTypes = [
+  "dog",
+  "cat",
+  "lizard",
+  "hamster",
+  "rabbit",
+  "other",
+];
 export const genders = ["male", "female", "unknown"];

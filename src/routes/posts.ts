@@ -9,9 +9,11 @@ import { getPost, getPosts } from "../controllers/getPosts.js";
 import {
   deletePost,
   editPost,
+  fakePostPosts,
   likePost,
   postPosts,
 } from "../controllers/mutatePosts.js";
+import multer from "multer";
 
 const router = Router();
 
@@ -20,7 +22,7 @@ router.get("/", getPosts);
 router.post(
   "/",
   auth,
-  upload.single("img"),
+  upload.single("image"),
   postValidation,
   validate,
   postPosts

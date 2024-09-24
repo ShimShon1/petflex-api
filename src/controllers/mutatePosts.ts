@@ -26,6 +26,31 @@ export async function postPosts(
   }
 }
 
+export async function fakePostPosts(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    console.log(req.file);
+    console.log(req.body);
+    const post = new Post({
+      name: req.body.name,
+      user: req.context.user._id,
+      description: req.body.description,
+      image: req.file?.path,
+      imageName: req.file?.filename,
+      gender: req.body.gender,
+      birthDate: req.body.birthDate,
+      petType: req.body.petType,
+    });
+    await post.save();
+    return res.json({ post });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function editPost(
   req: UserRequest,
   res: express.Response,
