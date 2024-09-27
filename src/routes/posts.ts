@@ -14,6 +14,7 @@ import {
   postPosts,
 } from "../controllers/mutatePosts.js";
 import multer from "multer";
+import { UserRequest } from "../types.js";
 
 const router = Router();
 
@@ -37,7 +38,18 @@ router.put(
   validate,
   editPost
 );
-router.get("/:postId", getPostByParam, getPost);
+router.get(
+  "/:postId",
+  (req: UserRequest, res, next) => {
+    req.context = {
+      ...req.context,
+      populateUser: true,
+    };
+    next();
+  },
+  getPostByParam,
+  getPost
+);
 
 router.post("/:postId/likes", auth, getPostByParam, likePost);
 
