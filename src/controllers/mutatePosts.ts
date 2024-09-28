@@ -3,7 +3,7 @@ import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import { UserRequest } from "../types.js";
 import express from "express";
-export async function postPosts(
+export async function postPost(
   req: UserRequest,
   res: express.Response,
   next: express.NextFunction
@@ -20,32 +20,9 @@ export async function postPosts(
       petType: req.body.petType,
     });
     await post.save();
-    return res.json({ post });
-  } catch (error) {
-    next(error);
-  }
-}
+    const fullPost = await post.populate("user", "username");
 
-export async function fakePostPosts(
-  req: UserRequest,
-  res: express.Response,
-  next: express.NextFunction
-) {
-  try {
-    console.log(req.file);
-    console.log(req.body);
-    const post = new Post({
-      name: req.body.name,
-      user: req.context.user._id,
-      description: req.body.description,
-      image: req.file?.path,
-      imageName: req.file?.filename,
-      gender: req.body.gender,
-      birthDate: req.body.birthDate,
-      petType: req.body.petType,
-    });
-    await post.save();
-    return res.json({ post });
+    return res.json(fullPost);
   } catch (error) {
     next(error);
   }
@@ -67,7 +44,7 @@ export async function editPost(
     post.birthDate = body.birthDate;
 
     await post.save();
-    return res.json({ post });
+    return res.json(post);
   } catch (error) {
     next(error);
   }
@@ -83,7 +60,7 @@ export async function likePost(
     const post = req.context.post;
     if (post.likes.includes(id)) {
       post.likes = post.likes.filter(
-        (l: string) => l.toString() !== id
+        (like: string) => like.toString() !== id
       );
     } else {
       post.likes.push(id);

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { NextFunction, Router } from "express";
 import auth from "../middlewares/auth.js";
 import { postValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
@@ -9,11 +9,9 @@ import { getPost, getPosts } from "../controllers/getPosts.js";
 import {
   deletePost,
   editPost,
-  fakePostPosts,
   likePost,
-  postPosts,
+  postPost,
 } from "../controllers/mutatePosts.js";
-import multer from "multer";
 import { UserRequest } from "../types.js";
 
 const router = Router();
@@ -26,30 +24,20 @@ router.post(
   upload.single("image"),
   postValidation,
   validate,
-  postPosts
+  postPost
 );
 
 router.put(
   "/:postId",
   auth,
+  populateUser,
   getPostByParam,
   checkSameUser,
   postValidation,
   validate,
   editPost
 );
-router.get(
-  "/:postId",
-  (req: UserRequest, res, next) => {
-    req.context = {
-      ...req.context,
-      populateUser: true,
-    };
-    next();
-  },
-  getPostByParam,
-  getPost
-);
+router.get("/:postId", populateUser, getPostByParam, getPost);
 
 router.post("/:postId/likes", auth, getPostByParam, likePost);
 
@@ -60,5 +48,17 @@ router.delete(
   checkSameUser,
   deletePost
 );
+
+function populateUser(
+  req: UserRequest,
+  res: Express.Response,
+  next: NextFunction
+) {
+  req.context = {
+    ...req.context,
+    populateUser: true,
+  };
+  next();
+}
 
 export default router;

@@ -19,7 +19,7 @@ export async function getPostByParam(
     const post = req.context.populateUser
       ? await Post.findOne({
           _id: req.params.postId,
-        }).populate("user")
+        }).populate("user", "username")
       : await Post.findOne({
           _id: req.params.postId,
         });

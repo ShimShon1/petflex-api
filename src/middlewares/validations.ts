@@ -42,6 +42,7 @@ const birthValid = makeStringValidator("birthDate")
     }
   })
   .withMessage("birth date is invalid");
+
 //middleware arrays for controllers
 export const userValidation = [usernameValid, passwordValid];
 

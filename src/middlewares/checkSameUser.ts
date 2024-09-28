@@ -6,7 +6,12 @@ export default async function checkSameUser(
   res: express.Response,
   next: express.NextFunction
 ) {
-  if (req.context.post.user.toString() === req.context.user._id) {
+  const loggedUserId = req.context.user._id;
+  console.log(req.context.post.user._id);
+  if (
+    req.context.post.user.toString() === loggedUserId ||
+    req.context.post.user._id.toString() === loggedUserId
+  ) {
     next();
   } else {
     return res
