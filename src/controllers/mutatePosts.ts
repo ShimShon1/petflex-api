@@ -66,6 +66,7 @@ export async function likePost(
       post.likes.push(id);
     }
 
+    post.likesCount = post.likes.length;
     await post.save();
     return res.status(200).json({ likes: post.likes });
   } catch (error) {

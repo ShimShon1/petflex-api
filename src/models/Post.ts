@@ -34,13 +34,11 @@ const PostSchema = new mongoose.Schema({
     required: true,
     enum: petTypes,
   },
+
   likes: [{ type: Types.ObjectId, ref: "User" }],
+  likesCount: { type: Number, default: 0 },
   commentsCount: { type: Number, default: 0 },
   createdAt: { type: Date, required: true, default: Date.now },
-});
-
-PostSchema.virtual("likesCount").get(function () {
-  return this.likes?.length;
 });
 
 PostSchema.virtual("age").get(function () {

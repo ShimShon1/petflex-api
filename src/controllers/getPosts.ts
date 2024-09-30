@@ -21,9 +21,10 @@ export async function getPosts(
           };
 
     //get query settings (so far only pettype)
-    const query = req.query.petType
-      ? { petType: req.query.petType }
-      : {};
+    const query =
+      req.query.petType != "" && req.query.petType
+        ? { petType: req.query.petType }
+        : {};
 
     //calculate amount of posts to send
     //change for actual production to show more for inital page.
