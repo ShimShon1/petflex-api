@@ -15,6 +15,7 @@ export async function getPosts(
       req.query.sortBy === "likes"
         ? {
             likesCount: order,
+            createdAt: -1,
           }
         : {
             createdAt: order,
@@ -37,6 +38,7 @@ export async function getPosts(
       .limit(limit)
       .populate("user", "username")
       .sort(sort);
+
     res.status(200).json(posts);
   } catch (error) {
     next(error);
