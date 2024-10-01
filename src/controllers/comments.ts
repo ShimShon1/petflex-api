@@ -68,7 +68,6 @@ export async function getComments(
 
     res.status(200).json(comments);
   } catch (error) {
-    console.error(error);
     next(error);
   }
 }
@@ -96,13 +95,11 @@ export async function deleteComment(
       });
     }
 
-    console.log(req.context.user._id, String(comment.user));
     if (String(req.context.user._id) !== String(comment.user)) {
       return res.status(403).json({
         errors: [{ msg: "Not the same user" }],
       });
     }
-    // console.log(comment);
 
     // check for replies, delete if it doesn't have any
     if (!comment.hasReplies) {

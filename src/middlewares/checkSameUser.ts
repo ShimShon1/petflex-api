@@ -7,7 +7,6 @@ export default async function checkSameUser(
   next: express.NextFunction
 ) {
   const loggedUserId = req.context.user._id;
-  console.log(req.context.post.user._id);
   if (
     req.context.post.user.toString() === loggedUserId ||
     req.context.post.user._id.toString() === loggedUserId
