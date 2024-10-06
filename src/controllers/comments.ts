@@ -48,23 +48,9 @@ export async function getComments(
 ) {
   try {
     const postId = new mongoose.Types.ObjectId(req.params.postId);
-
-    const topLevelComments = await Comment.find({
-      postId: postId,
-      parentId: null,
+    const comments = await Comment.find({
+      postId,
     }).populate("user", "username");
-
-    const topLevelCommentsWithReplies = [];
-    for (const comment of topLevelComments) {
-      const commentObject: any = comment.toObject();
-      if (commentObject.hasReplies) {
-        commentObject.replies = await fetchReplies(comment._id);
-      } else {
-        commentObject.replies = [];
-      }
-      topLevelCommentsWithReplies.push(commentObject);
-    }
-    const comments = topLevelCommentsWithReplies;
 
     res.status(200).json(comments);
   } catch (error) {
