@@ -71,11 +71,21 @@ export async function deleteComment(
         .json({ errors: [{ msg: "invalid id, comment not found" }] });
     }
     const comment = await Comment.findById(req.params.commentId);
-    if (!comment || comment.available === false) {
+    if (!comment) {
       return res.status(404).json({
         errors: [
           {
             msg: "comment not found, probably deleted or unavailable",
+          },
+        ],
+      });
+    }
+
+    if (comment.available === false && comment.hasReplies) {
+      return res.status(404).json({
+        errors: [
+          {
+            msg: "comment still has replies",
           },
         ],
       });
