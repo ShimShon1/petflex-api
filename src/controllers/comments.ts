@@ -110,8 +110,12 @@ export async function deleteComment(
             comment.parentId
           );
 
-          parentComment!.hasReplies = false;
-          await parentComment!.save();
+          if (parentComment?.available === false) {
+            await parentComment.deleteOne();
+          } else {
+            parentComment!.hasReplies = false;
+            await parentComment!.save();
+          }
         }
       }
     } else if (comment.hasReplies) {
