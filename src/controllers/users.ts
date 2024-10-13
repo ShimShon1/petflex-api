@@ -48,9 +48,7 @@ export async function login(
           .json({ errors: [{ msg: "Wrong password" }] });
       } else {
         const payload = user.toObject();
-        const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-          expiresIn: "7d",
-        });
+        const token = jwt.sign(payload, process.env.JWT_SECRET!);
         return res.status(200).json({
           token,
           user: {

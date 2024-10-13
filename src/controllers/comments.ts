@@ -71,6 +71,7 @@ export async function deleteComment(
         .json({ errors: [{ msg: "invalid id, comment not found" }] });
     }
     const comment = await Comment.findById(req.params.commentId);
+
     if (!comment) {
       return res.status(404).json({
         errors: [
@@ -81,6 +82,11 @@ export async function deleteComment(
       });
     }
 
+    if (String(req.context.user._id) !== String(comment.user)) {
+      return res.status(403).json({
+        errors: [{ msg: "Not the same user" }],
+      });
+    }
     if (comment.available === false && comment.hasReplies) {
       return res.status(404).json({
         errors: [
@@ -91,15 +97,15 @@ export async function deleteComment(
       });
     }
 
-    if (String(req.context.user._id) !== String(comment.user)) {
-      return res.status(403).json({
-        errors: [{ msg: "Not the same user" }],
-      });
-    }
+    let decrease = false;
 
     // check for replies, delete if it doesn't have any
     if (!comment.hasReplies) {
       await comment.deleteOne();
+      decrease = true;
+      if (comment.available === false) {
+        decrease = false;
+      }
       //check if parent comment has more replies, if it doesnt, change parent hasReplies prop
       if (comment.parentId) {
         const hasMoreReplies = await Comment.exists({
@@ -112,6 +118,17 @@ export async function deleteComment(
 
           if (parentComment?.available === false) {
             await parentComment.deleteOne();
+            if (
+              !(await Comment.exists({
+                parentId: parentComment.parentId,
+              }))
+            ) {
+              const parentParentComment = await Comment.findById(
+                parentComment.parentId
+              )!;
+              parentParentComment!.hasReplies = false;
+              await parentParentComment!.save();
+            }
           } else {
             parentComment!.hasReplies = false;
             await parentComment!.save();
@@ -122,13 +139,18 @@ export async function deleteComment(
       //if comment does have replies, modify
       comment.content = "this comment has been deleted";
       comment.available = false;
+      decrease = true;
+
       await comment.save();
     }
-    //decrease comments count by 1
-    await Post.updateOne(
-      { _id: comment.postId },
-      { $inc: { commentsCount: -1 } }
-    );
+
+    //decrease comments count if available comments have been deleted
+    if (decrease) {
+      await Post.updateOne(
+        { _id: comment.postId },
+        { $inc: { commentsCount: -1 } }
+      );
+    }
     return next();
   } catch (error) {
     next(error);
