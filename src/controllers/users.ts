@@ -54,7 +54,6 @@ export async function login(
           user: {
             _id: user._id,
             username: user.username,
-            notifications: user.notifications,
           },
         });
       }

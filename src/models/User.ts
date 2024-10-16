@@ -13,12 +13,6 @@ const UserSchema = new mongoose.Schema({
     minLength: 5,
     maxLength: 500,
   },
-  notifications: [
-    {
-      message: { type: String, required: true },
-      isRead: { type: Boolean, required: true },
-    },
-  ],
 });
 
 const User = mongoose.model("User", UserSchema);

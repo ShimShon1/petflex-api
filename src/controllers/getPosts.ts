@@ -30,8 +30,8 @@ export async function getPosts(
     //calculate amount of posts to send
     //change for actual production to show more for inital page.
     const page = Number(req.query.page) || 1;
-    const limit = page === 1 ? 4 : 2;
-    const skip = page <= 1 ? 0 : (page - 1) * 2 + 2;
+    const limit = page === 1 ? 3 : 3;
+    const skip = page <= 1 ? 0 : (page - 1) * 2 + 3;
 
     const posts = await Post.find(query, { imageName: 0 })
       .skip(skip)
