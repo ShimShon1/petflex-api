@@ -24,4 +24,6 @@ export const CommentSchema = new mongoose.Schema({
   createdAt: { type: Date, required: true, default: Date.now },
 });
 
+CommentSchema.index({ postId: 1, createdAt: -1 });
+
 export default mongoose.model("Comment", CommentSchema);

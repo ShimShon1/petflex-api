@@ -9,7 +9,7 @@ const usernameValid = makeStringValidator("username", {
 
 const passwordValid = makeStringValidator("password", {
   min: 5,
-  max: 40,
+  max: 500,
 });
 
 //for posts (mainly)
@@ -19,7 +19,7 @@ const nameValid = makeStringValidator("name", {
 });
 const descriptionValid = makeStringValidator("description", {
   min: 3,
-  max: 5000,
+  max: 1000,
 });
 
 const genderValid = makeStringValidator("gender")

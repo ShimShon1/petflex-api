@@ -9,7 +9,7 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: 3,
-    maxLength: 5000,
+    maxLength: 1000,
   },
   image: {
     type: String,
@@ -21,7 +21,7 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: 3,
-    maxLength: 1200,
+    maxLength: 2000,
   },
   gender: {
     type: String,

@@ -8,6 +8,8 @@ export const petTypes = [
   "cat",
   "lizard",
   "hamster",
+  "bird",
+  "fish",
   "rabbit",
   "other",
 ];

@@ -14,5 +14,6 @@ export default function (birthDate: any) {
     const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
     days += prevMonth.getDate();
   }
+  if (years < 0) years = 0;
   return { years, months, days };
 }
