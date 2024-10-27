@@ -7,9 +7,6 @@ export default (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  console.log("error handling!");
-  console.log(err);
-
   return res.status(500).json({
     errors: [{ msg: err.message || "there was an error" }],
   });

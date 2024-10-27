@@ -73,7 +73,6 @@ export function getUser(
   next: express.NextFunction
 ) {
   try {
-    // console.log("getting user...");
     const { password, iat, exp, ...user } = req.context.user;
     delete user.__v;
     res.status(200).json(user);

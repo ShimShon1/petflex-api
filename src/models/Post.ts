@@ -4,7 +4,7 @@ import calcAge from "../helpers/calcAge.js";
 
 const PostSchema = new mongoose.Schema({
   user: { type: Types.ObjectId, ref: "User", required: true },
-  name: { type: String, required: true, minLength: 3, maxLength: 30 },
+  name: { type: String, required: true, minLength: 3, maxLength: 20 },
   description: {
     type: String,
     required: true,

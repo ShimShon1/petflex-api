@@ -15,7 +15,7 @@ const passwordValid = makeStringValidator("password", {
 //for posts (mainly)
 const nameValid = makeStringValidator("name", {
   min: 3,
-  max: 30,
+  max: 20,
 });
 const descriptionValid = makeStringValidator("description", {
   min: 3,
