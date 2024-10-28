@@ -24,7 +24,8 @@ export async function register(
       password: password,
     });
     await newUser.save();
-    return res.status(201).json({ msg: "User created" });
+
+    return next();
   } catch (error) {
     next(error);
   }

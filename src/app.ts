@@ -25,7 +25,7 @@ app.use(
 app.use(
   limit({
     windowMs: 1000 * 60 * 1,
-    limit: 30,
+    limit: 1000,
   })
 );
 app.use(express.json());
