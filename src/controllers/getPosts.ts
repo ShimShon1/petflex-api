@@ -1,6 +1,6 @@
 import express from "express";
 import Post from "../models/Post.js";
-import { UserRequest } from "../types.js";
+import { petTypes, UserRequest } from "../types.js";
 
 export async function getPosts(
   req: express.Request,
@@ -23,7 +23,8 @@ export async function getPosts(
 
     //get query settings (so far only pettype)
     const query =
-      req.query.petType != "" && req.query.petType
+      req.query.petType != "" &&
+      petTypes.includes(String(req.query.petType))
         ? { petType: req.query.petType }
         : {};
 

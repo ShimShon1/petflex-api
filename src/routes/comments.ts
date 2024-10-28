@@ -7,13 +7,14 @@ import {
 import validate from "../middlewares/validate.js";
 import { makeStringValidator } from "../helpers/make_validators.js";
 import auth from "../middlewares/auth.js";
+import { commentValidation } from "../middlewares/validations.js";
 
 const router = Router();
 
 router.post(
   "/:postId",
   auth,
-  makeStringValidator("content", { min: 3, max: 200 }),
+  commentValidation,
   validate,
   postComment,
   getComments

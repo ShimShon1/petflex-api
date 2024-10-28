@@ -1,6 +1,7 @@
 import { body } from "express-validator";
 import { makeStringValidator } from "../helpers/make_validators.js";
 import { genders, petTypes } from "../types.js";
+import { isObjectIdOrHexString } from "mongoose";
 
 const usernameValid = makeStringValidator("username", {
   min: 3,
@@ -43,7 +44,22 @@ const birthValid = makeStringValidator("birthDate")
   })
   .withMessage("birth date is invalid");
 
+const parentIdValid = body("parentId")
+  .custom((id) => {
+    if (isObjectIdOrHexString(id)) return true;
+    return false;
+  })
+  .withMessage("invalud parent Id");
+
+const contentValid = makeStringValidator("content", {
+  min: 3,
+  max: 200,
+});
+
 //middleware arrays for controllers
+
+export const commentValidation = [contentValid, parentIdValid];
+
 export const userValidation = [usernameValid, passwordValid];
 
 export const postValidation = [
