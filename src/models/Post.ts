@@ -45,6 +45,8 @@ PostSchema.virtual("age").get(function () {
   return this?.birthDate && calcAge(this.birthDate);
 });
 
+PostSchema.index({ createdAt: -1 });
+
 PostSchema.set("toJSON", { virtuals: true });
 PostSchema.set("toObject", { virtuals: true });
 
