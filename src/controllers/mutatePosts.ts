@@ -9,6 +9,16 @@ export async function postPost(
   next: express.NextFunction
 ) {
   try {
+    const posted = await Post.countDocuments({
+      user: req.context.user._id,
+    });
+    if (posted > 10) {
+      destroy(req.file?.filename || "");
+      return res
+        .status(400)
+        .json({ errors: [{ msg: "you posted too many pets" }] });
+    }
+    console.log("posted", posted);
     const post = new Post({
       name: req.body.name,
       user: req.context.user._id,
