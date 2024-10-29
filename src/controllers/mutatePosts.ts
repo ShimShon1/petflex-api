@@ -18,7 +18,6 @@ export async function postPost(
         .status(400)
         .json({ errors: [{ msg: "you posted too many pets" }] });
     }
-    console.log("posted", posted);
     const post = new Post({
       name: req.body.name,
       user: req.context.user._id,
