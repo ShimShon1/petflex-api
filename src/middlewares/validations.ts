@@ -46,10 +46,10 @@ const birthValid = makeStringValidator("birthDate")
 
 const parentIdValid = body("parentId")
   .custom((id) => {
-    if (isObjectIdOrHexString(id)) return true;
+    if (isObjectIdOrHexString(id) || id == null) return true;
     return false;
   })
-  .withMessage("invalud parent Id");
+  .withMessage("invalid parent Id");
 
 const contentValid = makeStringValidator("content", {
   min: 3,
