@@ -32,7 +32,7 @@ export async function getPosts(
     //change for actual production to show more for inital page.
     const page = Number(req.query.page) || 1;
     const limit = page === 1 ? 9 : 6;
-    const skip = page === 1 ? 0 : (page - 1) * 6 + 9;
+    const skip = page === 1 ? 0 : (page - 2) * 6 + 9;
 
     const posts = await Post.find(query, { imageName: 0 })
       .skip(skip)

@@ -9,7 +9,8 @@ export default async function checkSameUser(
   const loggedUserId = req.context.user._id;
   if (
     req.context.post.user.toString() === loggedUserId ||
-    req.context.post.user._id.toString() === loggedUserId
+    req.context.post.user._id.toString() === loggedUserId ||
+    process.env.ADMINS?.split(",").includes(req.context.user._id)
   ) {
     next();
   } else {

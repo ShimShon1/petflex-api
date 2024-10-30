@@ -55,6 +55,9 @@ export async function login(
           user: {
             _id: user._id,
             username: user.username,
+            admin: process.env.ADMINS?.split(",").includes(
+              String(user._id)
+            ),
           },
         });
       }
@@ -75,6 +78,10 @@ export function getUser(
 ) {
   try {
     const { password, iat, exp, ...user } = req.context.user;
+    if (process.env.ADMINS?.split(",").includes(user._id)) {
+      user.admin = true;
+    }
+
     delete user.__v;
     res.status(200).json(user);
   } catch (error) {
