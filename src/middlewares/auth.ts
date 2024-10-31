@@ -1,6 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { UserRequest } from "../types.js";
+import User from "../models/User.js";
+import { ObjectId } from "mongoose";
 export default async function auth(
   req: UserRequest,
   res: express.Response,
@@ -13,8 +15,23 @@ export default async function auth(
     });
   }
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET!);
-    if (verified) {
+    const verified = jwt.verify(token, process.env.JWT_SECRET!) as {
+      _id: ObjectId | string;
+      username: string;
+    };
+
+    if (verified && verified._id) {
+      const user = await User.findById(verified._id);
+      if (!user) {
+        return res
+          .status(401)
+          .json({ errors: [{ msg: "User not found" }] });
+      }
+      if (user.isBanned) {
+        return res
+          .status(403)
+          .json({ errors: [{ msg: "User is banned" }] });
+      }
       req.context = { user: verified };
       next();
     }

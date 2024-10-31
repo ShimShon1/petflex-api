@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
     minLength: 5,
     maxLength: 500,
   },
+  isBanned: { type: Boolean },
 });
 
 UserSchema.index({ username: 1 });

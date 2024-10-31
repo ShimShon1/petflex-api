@@ -82,7 +82,10 @@ export async function deleteComment(
       });
     }
 
-    if (String(req.context.user._id) !== String(comment.user)) {
+    if (
+      String(req.context.user._id) !== String(comment.user) &&
+      !process.env.ADMINS?.split(",").includes(req.context.user._id)
+    ) {
       return res.status(403).json({
         errors: [{ msg: "Not the same user" }],
       });
