@@ -32,7 +32,7 @@ export default async function auth(
           .status(403)
           .json({ errors: [{ msg: "User is banned" }] });
       }
-      req.context = { user };
+      req.context = { user: verified };
       next();
     }
   } catch (error) {
