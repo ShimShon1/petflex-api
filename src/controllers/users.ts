@@ -49,6 +49,11 @@ export async function login(
           .json({ errors: [{ msg: "Wrong password" }] });
       } else {
         const { password, ...payload } = user.toObject();
+        if (user.isBanned) {
+          return res
+            .status(401)
+            .json({ errors: [{ msg: "User is banned" }] });
+        }
         const token = jwt.sign(payload, process.env.JWT_SECRET!);
         return res.status(200).json({
           token,
