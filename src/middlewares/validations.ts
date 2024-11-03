@@ -35,6 +35,7 @@ const petTypeValid = makeStringValidator("petType")
 
 const birthValid = makeStringValidator("birthDate")
   .custom((value) => {
+    if (value === "dead") return true;
     const date = new Date(value);
     if (isNaN(date.getFullYear())) {
       return false;
@@ -56,6 +57,9 @@ const contentValid = makeStringValidator("content", {
   max: 200,
 });
 
+const isDeadValid = body("isDead")
+  .isBoolean()
+  .withMessage("Is dead must be a boolean");
 //middleware arrays for controllers
 
 export const commentValidation = [contentValid, parentIdValid];
@@ -68,4 +72,5 @@ export const postValidation = [
   genderValid,
   petTypeValid,
   birthValid,
+  isDeadValid,
 ];

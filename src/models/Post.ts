@@ -28,13 +28,20 @@ const PostSchema = new mongoose.Schema({
     required: true,
     enum: genders,
   },
-  birthDate: { type: Date, required: true },
+  birthDate: {
+    type: Date,
+    required: true,
+  },
   petType: {
     type: String,
     required: true,
     enum: petTypes,
   },
-
+  isDead: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   likes: [{ type: Types.ObjectId, ref: "User" }],
   likesCount: { type: Number, default: 0 },
   commentsCount: { type: Number, default: 0 },

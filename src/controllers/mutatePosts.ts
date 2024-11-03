@@ -27,6 +27,7 @@ export async function postPost(
       gender: req.body.gender,
       birthDate: req.body.birthDate,
       petType: req.body.petType,
+      isDead: req.body.isDead,
     });
     await post.save();
     const fullPost = await post.populate("user", "username");
@@ -45,12 +46,12 @@ export async function editPost(
   try {
     const post = req.context.post;
     const body = req.body;
-
     post.name = body.name;
     post.description = body.description;
     post.gender = body.gender;
     post.petType = body.petType;
     post.birthDate = body.birthDate;
+    post.isDead = body.isDead;
 
     await post.save();
     return res.json(post);
