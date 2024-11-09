@@ -12,7 +12,7 @@ export async function postPost(
     const posted = await Post.countDocuments({
       user: req.context.user._id,
     });
-    if (posted > 10) {
+    if (posted >= 7) {
       destroy(req.file?.filename || "");
       return res
         .status(400)

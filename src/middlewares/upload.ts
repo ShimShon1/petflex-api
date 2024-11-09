@@ -22,7 +22,7 @@ const storage = new CloudinaryStorage({
 
 export function destroy(url: string) {
   cloudinary.uploader.destroy(url, (error, result) => {
-    if (result.result != "ok") {
+    if (result?.result != "ok") {
       console.log("error deleting image:", result);
     }
     // else if (result.result == "ok") {
