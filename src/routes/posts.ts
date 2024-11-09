@@ -1,4 +1,4 @@
-import { NextFunction, Router } from "express";
+import { NextFunction, Router, Response } from "express";
 import auth from "../middlewares/auth.js";
 import { postValidation } from "../middlewares/validations.js";
 import validate from "../middlewares/validate.js";
@@ -20,6 +20,7 @@ router.get("/", getPosts);
 
 router.post(
   "/",
+  disabled,
   auth,
   upload.single("image"),
   postValidation,
@@ -29,6 +30,7 @@ router.post(
 
 router.put(
   "/:postId",
+  disabled,
   auth,
   populateUser,
   getPostByParam,
@@ -48,6 +50,20 @@ router.delete(
   checkSameUser,
   deletePost
 );
+
+function disabled(
+  req: Express.Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    return res
+      .status(500)
+      .json({ errors: [{ msg: "Posting is temporarily disabled" }] });
+  } catch (err) {
+    next(err);
+  }
+}
 
 function populateUser(
   req: UserRequest,
