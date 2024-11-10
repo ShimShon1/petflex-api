@@ -25,8 +25,8 @@ export async function getPosts(
     const query =
       req.query.petType != "" &&
       petTypes.includes(String(req.query.petType))
-        ? { petType: req.query.petType }
-        : {};
+        ? { petType: req.query.petType, public: true }
+        : { public: true };
 
     //calculate amount of posts to send
     //change for actual production to show more for inital page.
@@ -53,7 +53,12 @@ export async function getPost(
 ) {
   try {
     const post = req.context.post.toObject();
-    res.status(200).json({ ...post });
+    if (post.public) {
+      return res.status(200).json({ ...post });
+    }
+    return res
+      .status(404)
+      .json({ errors: [{ msg: "post not found" }] });
   } catch (error) {
     next(error);
   }

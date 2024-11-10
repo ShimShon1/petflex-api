@@ -30,9 +30,7 @@ export async function postPost(
       isDead: req.body.isDead,
     });
     await post.save();
-    const fullPost = await post.populate("user", "username");
-
-    return res.json(fullPost);
+    res.json({ msg: "Posted" });
   } catch (error) {
     next(error);
   }
