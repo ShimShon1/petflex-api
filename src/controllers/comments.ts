@@ -2,10 +2,8 @@ import mongoose, { isObjectIdOrHexString } from "mongoose";
 import Comment from "../models/Comment.js";
 import { UserRequest } from "../types.js";
 import express from "express";
-import fetchReplies from "../helpers/fetchReplies.js";
 import Post from "../models/Post.js";
 
-//create top level comments
 export async function postComment(
   req: UserRequest,
   res: express.Response,
@@ -19,15 +17,17 @@ export async function postComment(
       parentId: req.body.parentId,
       postId: req.params.postId,
     });
-    await comment.save();
     if (req.body.parentId) {
       const parent = await Comment.findById(req.body.parentId);
       if (parent == null) {
-        return res.status(404).json({ msg: "comment not found" });
+        return res
+          .status(404)
+          .json({ msg: "parent comment not found" });
       }
       parent.hasReplies = true;
       await parent.save();
     }
+    await comment.save();
 
     //increase comments count by 1
     await Post.updateOne(

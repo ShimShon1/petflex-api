@@ -31,6 +31,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 const PORT = process.env.PORT || 3000;
+
+//maybe send to next
 mongoose
   .connect(process.env.DB_LINK!)
   .catch((err) => console.log(err));

@@ -5,7 +5,7 @@ import validate from "../middlewares/validate.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", (_, res) => {
   res.json({
     msg: "Welcome to the petflex api! main routes are: /users, /posts, /comments",
   });

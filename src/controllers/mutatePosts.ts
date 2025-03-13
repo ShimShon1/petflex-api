@@ -99,3 +99,24 @@ export async function deletePost(
     next(error);
   }
 }
+
+export function makePostPublic(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    if (
+      !process.env.ADMINS?.split(",").includes(req.context.user._id)
+    ) {
+      return res
+        .status(403)
+        .json({ errors: [{ msg: "not an admin" }] });
+    }
+    req.context.post.public = true;
+    req.context.post.save();
+    return res.json({ msg: "Post made public" });
+  } catch (error) {
+    next(error);
+  }
+}

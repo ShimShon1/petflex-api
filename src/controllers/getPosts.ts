@@ -63,3 +63,43 @@ export async function getPost(
     next(error);
   }
 }
+
+//get private posts
+export async function getPrivatePosts(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    if (
+      !process.env.ADMINS?.split(",").includes(req.context.user._id)
+    ) {
+      return res
+        .status(403)
+        .json({ errors: [{ msg: "not an admin" }] });
+    }
+    const posts = await Post.find({ public: false }).populate(
+      "user",
+      "username"
+    );
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getSelfPosts(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  try {
+    let posts = await Post.find({
+      user: req.context.user._id,
+      public: true,
+    }).populate("user", "username");
+    return res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+}

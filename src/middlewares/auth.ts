@@ -21,7 +21,10 @@ export default async function auth(
     };
 
     if (verified && verified._id) {
-      const user = await User.findById(verified._id);
+      const user = await User.findOne({
+        _id: verified._id,
+        username: verified.username,
+      });
       if (!user) {
         return res
           .status(401)

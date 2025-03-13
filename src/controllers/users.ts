@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserRequest } from "../types.js";
+
 export async function register(
   req: express.Request,
   res: express.Response,
@@ -21,7 +22,7 @@ export async function register(
     const password = bcrypt.hashSync(req.body.password, 10);
     const newUser = new User({
       username: req.body.username,
-      password: password,
+      password,
     });
     await newUser.save();
 
