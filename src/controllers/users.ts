@@ -83,14 +83,42 @@ export function getUser(
   next: express.NextFunction
 ) {
   try {
-    const { password, iat, exp, ...user } = req.context.user;
-    if (process.env.ADMINS?.split(",").includes(user._id)) {
-      user.admin = true;
-    }
-
-    delete user.__v;
-    res.status(200).json(user);
+    return res.status(200).json(req.context.user);
   } catch (error) {
     next(error);
   }
+}
+
+export async function changeUsername(
+  req: UserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  const username = req.body.username;
+  if (username === req.context.user.username) {
+    return res.status(400).json({
+      msg: "error",
+      errors: [{ msg: "username is identical" }],
+    });
+  }
+
+  const usernameTaken = await User.exists({
+    username,
+  });
+
+  if (usernameTaken) {
+    return res.status(400).json({
+      msg: "error",
+      errors: [{ msg: "username is taken" }],
+    });
+  }
+  let dbUser = req.context.dbUser;
+  dbUser.username = username;
+  await dbUser.save();
+  const { password, ...payload } = dbUser.toObject();
+  const token = jwt.sign(payload, process.env.JWT_SECRET!);
+  return res.status(200).json({
+    token,
+    user: { ...req.context.user, username },
+  });
 }

@@ -87,7 +87,7 @@ export async function deleteComment(
       !process.env.ADMINS?.split(",").includes(req.context.user._id)
     ) {
       return res.status(403).json({
-        errors: [{ msg: "Not the same user" }],
+        errors: [{ msg: "Not the comment owner" }],
       });
     }
     if (comment.available === false && comment.hasReplies) {

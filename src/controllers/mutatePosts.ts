@@ -107,7 +107,9 @@ export function makePostPublic(
 ) {
   try {
     if (
-      !process.env.ADMINS?.split(",").includes(req.context.user._id)
+      !process.env.ADMINS?.split(",").includes(
+        req.context.user._id.toString()
+      )
     ) {
       return res
         .status(403)

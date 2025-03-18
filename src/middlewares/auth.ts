@@ -23,7 +23,6 @@ export default async function auth(
     if (verified && verified._id) {
       const user = await User.findOne({
         _id: verified._id,
-        username: verified.username,
       });
       if (!user) {
         return res
@@ -35,7 +34,17 @@ export default async function auth(
           .status(403)
           .json({ errors: [{ msg: "User is banned" }] });
       }
-      req.context = { user: verified };
+      req.context = {
+        user: {
+          _id: user._id.toString(),
+          username: user.username,
+          admin: process.env.ADMINS?.split(",").includes(
+            String(user._id)
+          ),
+        },
+        dbUser: user,
+      };
+
       next();
     }
   } catch (error) {

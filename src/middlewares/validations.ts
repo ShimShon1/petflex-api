@@ -3,7 +3,7 @@ import { makeStringValidator } from "../helpers/make_validators.js";
 import { genders, petTypes } from "../types.js";
 import { isObjectIdOrHexString } from "mongoose";
 
-const usernameValid = makeStringValidator("username", {
+export const usernameValid = makeStringValidator("username", {
   min: 3,
   max: 20,
 });
