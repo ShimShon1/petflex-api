@@ -5,6 +5,7 @@ import validate from "../middlewares/validate.js";
 import upload from "../middlewares/upload.js";
 import { getPostByParam } from "../middlewares/getPostByParam.js";
 import checkSameUser from "../middlewares/checkSameUser.js";
+
 import {
   getPost,
   getPosts,
@@ -19,6 +20,7 @@ import {
   postPost,
 } from "../controllers/mutatePosts.js";
 import { UserRequest } from "../types.js";
+import { postLimiter } from "../middlewares/limiters.js";
 
 const router = Router();
 
@@ -29,6 +31,7 @@ router.get("/self", auth, getSelfPosts);
 
 router.post(
   "/",
+  postLimiter,
   auth,
   upload.single("image"),
   postValidation,

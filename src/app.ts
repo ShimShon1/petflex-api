@@ -25,7 +25,10 @@ app.use(
 app.use(
   limit({
     windowMs: 1000 * 60 * 2,
-    limit: process.env.NODE_ENV === "production" ? 55 : 500,
+    limit:
+      process.env.NODE_ENV === "production"
+        ? Number(process.env.GENERAL_LIMIT) || 55
+        : 500,
   })
 );
 app.use(express.json());

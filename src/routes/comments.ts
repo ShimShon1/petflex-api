@@ -7,11 +7,13 @@ import {
 import validate from "../middlewares/validate.js";
 import auth from "../middlewares/auth.js";
 import { commentValidation } from "../middlewares/validations.js";
+import { commentLimiter } from "../middlewares/limiters.js";
 
 const router = Router();
 
 router.post(
   "/:postId",
+  commentLimiter,
   auth,
   commentValidation,
   validate,
